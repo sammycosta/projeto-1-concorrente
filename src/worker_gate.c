@@ -4,22 +4,27 @@
 #include "globals.h"
 #include "config.h"
 
-
-
 void worker_gate_look_queue()
 {
     /* Insira aqui sua lógica */
+    /* olho a fila de fora, no momento que estiver vazia seto a var
+    all_students_entered como TRUE, da forma
+        all_students_entered = number_students > 0 ? FALSE : TRUE;
+        assim a thread para de rodar.
+ */
 }
 
 void worker_gate_remove_student()
 {
     /* Insira aqui sua lógica */
+    queue_t fila = globals_get_queue();
+    student_t estudante_saindo = queue_remove(fila);
+    worker_gate_insert_queue_buffet(estudante_saindo);
 }
 
 void worker_gate_look_buffet()
 {
     /* Insira aqui sua lógica */
-
 }
 
 void *worker_gate_run(void *arg)

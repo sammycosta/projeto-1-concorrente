@@ -6,14 +6,16 @@
 void *chef_run()
 {
     /* Insira sua lógica aqui */
+    /* checa comida de todas bacias de todos buffets,
+    coloca comida,
+    vai embora quando todos estudantes se serviram*/
     while (TRUE)
     {
         msleep(5000); /* Pode retirar este sleep quando implementar a solução! */
     }
-    
+
     pthread_exit(NULL);
 }
-
 
 void chef_put_food()
 {
