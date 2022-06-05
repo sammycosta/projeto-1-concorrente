@@ -10,12 +10,12 @@
 #include "globals.h"
 #include "table.h"
 
-void* student_run(void *arg)
+void *student_run(void *arg)
 {
-    student_t *self = (student_t*) arg;
-    table_t *tables  = globals_get_table();
+    student_t *self = (student_t *)arg;
+    table_t *tables = globals_get_table();
 
-    worker_gate_insert_queue_buffet(self);
+    worker_gate_insert_queue_buffet(self); // duvida nessa função sendo chamada aqui
     student_serve(self);
     student_seat(self, tables);
     student_leave(self, tables);
@@ -51,10 +51,12 @@ student_t *student_init()
     for (int j = 0; j <= 4; j++)
     {
         student->_wishes[j] = _student_choice();
-        if(student->_wishes[j] == 1) none = FALSE;
+        if (student->_wishes[j] == 1)
+            none = FALSE;
     }
 
-    if(none == FALSE){
+    if (none == FALSE)
+    {
         /* O estudante só deseja proteína */
         student->_wishes[3] = 1;
     }
@@ -62,10 +64,10 @@ student_t *student_init()
     return student;
 };
 
-void student_finalize(student_t *self){
+void student_finalize(student_t *self)
+{
     free(self);
 };
-
 
 pthread_t students_come_to_lunch(int number_students)
 {
@@ -76,34 +78,34 @@ pthread_t students_come_to_lunch(int number_students)
 
 /**
  * @brief Função (privada) que inicializa as threads dos alunos.
- * 
- * @param arg 
- * @return void* 
+ *
+ * @param arg
+ * @return void*
  */
-void* _all_they_come(void *arg)
+void *_all_they_come(void *arg)
 {
     int number_students = *((int *)arg);
-    
+
     student_t *students[number_students];
 
     for (int i = 0; i < number_students; i++)
     {
-        students[i] = student_init();                                               /* Estudante é iniciado, recebe um ID e escolhe o que vai comer*/
+        students[i] = student_init(); /* Estudante é iniciado, recebe um ID e escolhe o que vai comer*/
     }
 
     for (int i = 0; i < number_students; i++)
     {
-        pthread_create(&students[i]->thread, NULL, student_run, students[i]);       /*  Cria as threads  */
+        pthread_create(&students[i]->thread, NULL, student_run, students[i]); /*  Cria as threads  */
     }
 
     for (int i = 0; i < number_students; i++)
     {
-        pthread_join(students[i]->thread, NULL);                                    /*  Aguarda o término das threads   */
+        pthread_join(students[i]->thread, NULL); /*  Aguarda o término das threads   */
     }
 
     for (int i = 0; i < number_students; i++)
     {
-        student_finalize(students[i]);                                              /*  Libera a memória de cada estudante  */
+        student_finalize(students[i]); /*  Libera a memória de cada estudante  */
     }
 
     pthread_exit(NULL);
@@ -113,7 +115,7 @@ void* _all_they_come(void *arg)
  * @brief Função que retorna as escolhas dos alunos, aleatoriamente (50% para cada opção)
  *        retornando 1 (escolhido) 0 (não escolhido). É possível que um aluno não goste de nenhuma opção
  *         de comida. Nesse caso, considere que ele ainda passa pela fila, como todos aqueles que vão comer.
- * @return int 
+ * @return int
  */
 int _student_choice()
 {
