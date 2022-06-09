@@ -23,6 +23,7 @@ void *chef_run()
         msleep(5000); /* Pode retirar este sleep quando implementar a solução! */
         chef_check_food(dados_buffet);
         if (dados_buffet->bacia != -1) {
+            
             chef_put_food(dados_buffet);
         }        
     }

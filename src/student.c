@@ -3,12 +3,17 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <semaphore.h>
 
 #include "student.h"
 #include "config.h"
 #include "worker_gate.h"
 #include "globals.h"
 #include "table.h"
+
+
+sem_t olhar_mesas; //pra ter garantia nos valores globais das mesas
+pthread_mutex_t pegar_cadeira;
 
 void *student_run(void *arg)
 {
@@ -26,16 +31,44 @@ void *student_run(void *arg)
 void student_seat(student_t *self, table_t *table)
 {
     /* Insira sua lógica aqui */
+    int i = 0;
+    while (i < config.tables) { //fica no loop olhando as mesas até achar uma com lugar vago
+        if (table[i]._empty_seats > 0) {
+            pthread_lock(&pegar_cadeira); //precisa de mutex, mas onde inicializar??
+            table[i]._empty_seats--;
+            pthread_mutex_unlock(&pegar_cadeira);
+            self->_id_buffet = table[i]._id; //salvando a mesa onde antes estava o buffet 
+            return;                          //(não tem variável pra mesa)
+        } else {                            
+            i = (i+1)%config.tables;
+        }
+    }
+    
 }
 
 void student_serve(student_t *self)
 {
     /* Insira sua lógica aqui */
+    buffet_t *buffet = globals_get_buffets();
+    while (self->_buffet_position < 5) {
+        if (self->_wishes[self->_buffet_position] == 1) {
+            //lock no mutex da bacia (um mutex pra cada bacia, de cada buffet)
+            if (buffet[self->_id_buffet]._meal[self->_buffet_position] > 0) {
+                buffet[self->_id_buffet]._meal[self->_buffet_position] -= 1; 
+            } 
+            //unlock
+            //talvez ter outro lock pra caso esteja vazio, pra que tente de novo depois? 
+        }
+        buffet_next_step(&buffet[self->_id_buffet], self); //precisa garantir que não tem ninguém na frente? 
+    } 
 }
 
 void student_leave(student_t *self, table_t *table)
 {
-    /* Insira sua lógica aqui */
+    /* Insira sua lógica aqui */ 
+    pthread_lock(&pegar_cadeira); //precisa de mutex, mas onde inicializar??
+    table[self->_id_buffet]._empty_seats++; //libera a cadeira
+    pthread_mutex_unlock(&pegar_cadeira);
 }
 
 /* --------------------------------------------------------- */
