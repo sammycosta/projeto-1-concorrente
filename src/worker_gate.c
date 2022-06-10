@@ -12,14 +12,15 @@ buffet_t *buffet_livre; // Preenchida por look_buffet
 void worker_gate_look_queue(int *all_students_entered)
 {
     int number_students = globals_get_queue()->_length;
-    all_students_entered = number_students > 0 ? FALSE : TRUE;
+    *all_students_entered = number_students > 0 ? FALSE : TRUE;
 }
 
 /* Atual: pop na queue de estudantes de fora. Não faz nada com ele, só remove; */
 void worker_gate_remove_student()
 {
     queue_t *fila = globals_get_queue();
-    student_t *estudante_saindo = queue_remove(fila);
+    queue_remove(fila);
+    // student_t *estudante_saindo = queue_remove(fila);
 }
 
 /* Checa todos os buffets, encontra primeiro vazio;
@@ -64,8 +65,8 @@ void *worker_gate_run(void *arg)
             pthread_mutex_lock(&catraca); // gambiarra pra não dar deadlock, alguma ideia melhor??
         }
 
-        lock(&sai_fila);              // POSSO REMOVER O PRIMEIRO ESTUDANTE?? UNLOCK NA INSERT
-        worker_gate_remove_student(); // Cuidado com isso, porque posso remover antes dele entregar.
+        pthread_mutex_lock(&sai_fila); // POSSO REMOVER O PRIMEIRO ESTUDANTE?? UNLOCK NA INSERT
+        worker_gate_remove_student();  // Cuidado com isso, porque posso remover antes dele entregar.
 
         fila_livre = worker_gate_look_buffet();
         msleep(5000); /* Pode retirar este sleep quando implementar a solução! */
@@ -94,12 +95,12 @@ void worker_gate_insert_queue_buffet(student_t *student)
 {
     // O ESTUDANTE QUE TENTOU SER INSERIDO É O PRIMEIRO DA FILA!
     // Então, caso catraca livre, ele pode ser inserido.
-    if (student->_id == globals_get_queue()->_first)
+    if (student->_id == globals_get_queue()->_first->_student->_id)
     {
 
         pthread_mutex_lock(&catraca);
         buffet_queue_insert(buffet_livre, student);
-        unlock(&sai_fila); // ELE JÁ ENTROU, POSSO REMOVER ele DA FILA!
+        pthread_mutex_unlock(&sai_fila); // ELE JÁ ENTROU, POSSO REMOVER ele DA FILA!
 
         /* Samantha comentando: então, passado desse lock, posso inserir no buffet
         Não sei se era assim para utilizar o sai_fila; apenas ideia. */
