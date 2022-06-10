@@ -18,9 +18,9 @@ void *student_run(void *arg)
 {
     student_t *self = (student_t *)arg;
     table_t *tables = globals_get_table();
-    while (!(5 > self->_buffet_position >= 0))
+    while (self->_buffet_position == -1)
     {
-        // Fica tentando até estar no buffet. USAR CONDIÇÃO MELHOR?
+        // Fica tentando até estar no buffet.
         worker_gate_insert_queue_buffet(self);
     }
     student_serve(self);

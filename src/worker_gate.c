@@ -59,16 +59,21 @@ void *worker_gate_run(void *arg)
     while (all_students_entered == FALSE)
     {
         worker_gate_look_queue(&all_students_entered); // Decide se finaliza thread.
+        /*
+        Desnecessário se inicia lockado e o próprio estudante que sai dá lock, não?.
         if (fila_livre != 'N')
         {
-            // Não existe fila livre: LOCK CATRACA
+            // Existe fila livre/Primeira inicialização
             pthread_mutex_lock(&catraca); // gambiarra pra não dar deadlock, alguma ideia melhor??
+        } */
+        fila_livre = worker_gate_look_buffet(); // unlock catraca ou não
+
+        if (fila_livre == 'L' || fila_livre == 'R')
+        {
+            // look buffet executou, garantindo um buffet livre
+            pthread_mutex_lock(&sai_fila); // Só sai daqui se estudante rodou função insert
+            worker_gate_remove_student();
         }
-
-        pthread_mutex_lock(&sai_fila); // POSSO REMOVER O PRIMEIRO ESTUDANTE?? UNLOCK NA INSERT
-        worker_gate_remove_student();  // Cuidado com isso, porque posso remover antes dele entregar.
-
-        fila_livre = worker_gate_look_buffet();
         msleep(5000); /* Pode retirar este sleep quando implementar a solução! */
     }
 
@@ -81,6 +86,8 @@ void worker_gate_init(worker_gate_t *self)
     pthread_create(&self->thread, NULL, worker_gate_run, &number_students);
     pthread_mutex_init(&catraca, NULL);
     pthread_mutex_init(&sai_fila, NULL);
+    pthread_mutex_lock(&catraca);  // INICIA LOCKADO. LOOK BUFFET DEVE DAR UNLOCK
+    pthread_mutex_lock(&sai_fila); // INICIA LOCKADO. ESTUDANTE DEVE DAR UNLOCK
 }
 
 void worker_gate_finalize(worker_gate_t *self)
@@ -102,8 +109,7 @@ void worker_gate_insert_queue_buffet(student_t *student)
         buffet_queue_insert(buffet_livre, student);
         pthread_mutex_unlock(&sai_fila); // ELE JÁ ENTROU, POSSO REMOVER ele DA FILA!
 
-        /* Samantha comentando: então, passado desse lock, posso inserir no buffet
-        Não sei se era assim para utilizar o sai_fila; apenas ideia. */
+        /* Samantha comentando: então, passado desse lock, posso inserir no buffet */
 
         // desisti, não lembro mais o que estava fazendo de manhã...kkkk
         // dúvida: o que tem que acontecer EM ORDEM, e o que não precisa?
