@@ -63,13 +63,7 @@ void *worker_gate_run(void *arg)
     while (all_students_entered == FALSE)
     {
         worker_gate_look_queue(&all_students_entered); // Decide se finaliza thread.
-        /*
-        Desnecessário se inicia lockado e o próprio estudante que sai dá lock, não?.
-        if (fila_livre != 'N')
-        {
-            // Existe fila livre/Primeira inicialização
-            pthread_mutex_lock(&catraca); // gambiarra pra não dar deadlock, alguma ideia melhor??
-        } */
+
         fila_livre = worker_gate_look_buffet(); // unlock catraca ou não
 
         if (fila_livre == 'L' || fila_livre == 'R')
@@ -112,10 +106,5 @@ void worker_gate_insert_queue_buffet(student_t *student)
         pthread_mutex_lock(&catraca);
         buffet_queue_insert(&buffets[student->_id_buffet], student);
         pthread_mutex_unlock(&sai_fila); // ELE JÁ ENTROU, POSSO REMOVER ele DA FILA!
-
-        /* Samantha comentando: então, passado desse lock, posso inserir no buffet */
-
-        // desisti, não lembro mais o que estava fazendo de manhã...kkkk
-        // dúvida: o que tem que acontecer EM ORDEM, e o que não precisa?
     }
 }
