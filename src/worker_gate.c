@@ -6,7 +6,6 @@
 #include "buffet.h"
 
 pthread_mutex_t catraca, sai_fila;
-buffet_t *buffet_livre; // Preenchida por look_buffet
 
 /* Modifica all_students_entered para TRUE quando não houver estudantes na fila externa */
 void worker_gate_look_queue(int *all_students_entered)
@@ -33,14 +32,19 @@ char worker_gate_look_buffet()
     {
         if (!buffets[i].queue_left[0])
         { // precisa mutex?
+            // preenche estudante e libera sua passagem
+            student_t *primeiro_estudante = globals_get_queue()->_first->_student;
+            primeiro_estudante->_id_buffet = buffets[i]._id;
+            primeiro_estudante->left_or_right = 'L';
             pthread_mutex_unlock(&catraca);
-            buffet_livre = &buffets[i];
             return 'L';
         }
         else if (!buffets[i].queue_right[0])
         {
+            student_t *primeiro_estudante = globals_get_queue()->_first->_student;
+            primeiro_estudante->_id_buffet = buffets[i]._id;
+            primeiro_estudante->left_or_right = 'R';
             pthread_mutex_unlock(&catraca);
-            buffet_livre = &buffets[i];
             return 'R';
         }
     }
@@ -104,9 +108,9 @@ void worker_gate_insert_queue_buffet(student_t *student)
     // Então, caso catraca livre, ele pode ser inserido.
     if (student->_id == globals_get_queue()->_first->_student->_id)
     {
-
+        buffet_t *buffets = globals_get_buffets();
         pthread_mutex_lock(&catraca);
-        buffet_queue_insert(buffet_livre, student);
+        buffet_queue_insert(&buffets[student->_id_buffet], student);
         pthread_mutex_unlock(&sai_fila); // ELE JÁ ENTROU, POSSO REMOVER ele DA FILA!
 
         /* Samantha comentando: então, passado desse lock, posso inserir no buffet */
