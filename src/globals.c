@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "globals.h"
+#include "config.h"
 
 queue_t *students_queue = NULL;
 table_t *table = NULL;
@@ -27,7 +28,6 @@ table_t *globals_get_table()
     return table;
 }
 
-
 void globals_set_students(int number)
 {
     students_number = number;
@@ -48,7 +48,6 @@ buffet_t *globals_get_buffets()
     return buffets_ref;
 }
 
-
 /**
  * @brief Finaliza todas as variáveis globais que ainda não foram liberadas.
  *  Se criar alguma variável global que faça uso de mallocs, lembre-se sempre de usar o free dentro
@@ -56,5 +55,15 @@ buffet_t *globals_get_buffets()
  */
 void globals_finalize()
 {
+
+    /* Destruir mutexes aqui por enquanto */
+    for (int i = 0; i < config.buffets; i++)
+    {
+        for (int j = 0; j < 5; j++)
+        { // destruindo mutex por bacia
+            pthread_mutex_destroy(&buffets_ref[i].mutex_meals[j]);
+        }
+    }
+    /* */
     free(table);
 }

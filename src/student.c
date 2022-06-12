@@ -55,21 +55,26 @@ void student_serve(student_t *self)
 {
     /* Insira sua lógica aqui */
     buffet_t *buffet = globals_get_buffets();
+    int id_buffet = self->_id_buffet;
+
     while (self->_buffet_position < 5)
     {
         if (self->_wishes[self->_buffet_position] == 1)
         {
-            // lock no mutex da bacia (um mutex pra cada bacia, de cada buffet)
             // LEMBRAR. ESTUDANTES DA MESMA FILA NÃO PODEM PEGAR A MESMA BACIA (USAR L/R)
             // MAS ESTUDANTES DE FILAS DIFERENTES PODEM NA MESMA BACIA!
-            if (buffet[self->_id_buffet]._meal[self->_buffet_position] > 0)
+            if (buffet[id_buffet]._meal[self->_buffet_position] > 0)
             {
-                buffet[self->_id_buffet]._meal[self->_buffet_position] -= 1;
+                // lock no mutex da bacia (um mutex pra cada bacia, de cada buffet)
+                pthread_mutex_lock(&buffet[id_buffet].mutex_meals[self->_buffet_position]);
+
+                buffet[id_buffet]._meal[self->_buffet_position] -= 1;
+
+                pthread_mutex_unlock(&buffet[id_buffet].mutex_meals[self->_buffet_position]);
             }
-            // unlock
             // talvez ter outro lock pra caso esteja vazio, pra que tente de novo depois?
         }
-        buffet_next_step(&buffet[self->_id_buffet], self); // precisa garantir que não tem ninguém na frente?
+        buffet_next_step(&buffet[id_buffet], self); // precisa garantir que não tem ninguém na frente?
     }
 }
 
