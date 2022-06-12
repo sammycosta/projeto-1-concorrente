@@ -40,7 +40,9 @@ Caso não exista bacia vazia, dados->bacia recebe -1 */
 void chef_check_food(struct dados_buffet *dados)
 {
     buffet_t *buffets = globals_get_buffets();
-    for (int i = 0; i < config.buffets; i++)
+    int number_of_buffets = globals_get_number_of_buffets();
+
+    for (int i = 0; i < number_of_buffets; i++)
     {
         for (int bacia = 0; i < 5; i++)
         {

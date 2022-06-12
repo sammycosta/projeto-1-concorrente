@@ -28,7 +28,9 @@ Ou retorna N caso não houver local vazio nas filas dos buffets. */
 char worker_gate_look_buffet()
 {
     buffet_t *buffets = globals_get_buffets();
-    for (int i = 0; i < config.buffets; i++)
+    int number_of_buffets = globals_get_number_of_buffets();
+
+    for (int i = 0; i < number_of_buffets; i++)
     {
         if (!buffets[i].queue_left[0])
         { // precisa mutex?

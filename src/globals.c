@@ -6,6 +6,7 @@ queue_t *students_queue = NULL;
 table_t *table = NULL;
 buffet_t *buffets_ref = NULL;
 
+int number_of_buffets = 0;
 int students_number = 0;
 
 void globals_set_queue(queue_t *queue)
@@ -48,6 +49,16 @@ buffet_t *globals_get_buffets()
     return buffets_ref;
 }
 
+void globals_set_number_of_buffets(int number)
+{
+    number_of_buffets = number;
+}
+
+int globals_get_number_of_buffets()
+{
+    return students_number;
+}
+
 /**
  * @brief Finaliza todas as variáveis globais que ainda não foram liberadas.
  *  Se criar alguma variável global que faça uso de mallocs, lembre-se sempre de usar o free dentro
@@ -57,7 +68,7 @@ void globals_finalize()
 {
 
     /* Destruir mutexes aqui por enquanto */
-    for (int i = 0; i < config.buffets; i++)
+    for (int i = 0; i < number_of_buffets; i++)
     {
         for (int j = 0; j < 5; j++)
         { // destruindo mutex por bacia

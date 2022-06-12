@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "buffet.h"
 #include "config.h"
+#include "globals.h"
 
 void *buffet_run(void *arg)
 {
@@ -23,6 +24,8 @@ void *buffet_run(void *arg)
 void buffet_init(buffet_t *self, int number_of_buffets)
 {
     int i = 0, j = 0;
+    globals_set_number_of_buffets(number_of_buffets);
+
     for (i = 0; i < number_of_buffets; i++)
     {
         /*A fila possui um ID*/
