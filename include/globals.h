@@ -79,4 +79,31 @@ extern void globals_set_number_of_buffets(int number);
  */
 extern int globals_get_number_of_buffets();
 
+/**
+ * @brief Insere o número de tables (de modo global)
+ *
+ */
+extern void globals_set_number_of_tables(int number);
+
+/**
+ * @brief Retorna o número de tables (de modo global)
+ *
+ * @return int
+ */
+
+extern int globals_get_number_of_tables();
+
+/**
+ * @brief Insere o número de seats por table (de modo global)
+ *
+ */
+extern void globals_set_seats_per_table(int number);
+
+/**
+ * @brief Retorna o número de seats por table (de modo global)
+ *
+ * @return int
+ */
+extern int globals_get_seats_per_table();
+
 #endif

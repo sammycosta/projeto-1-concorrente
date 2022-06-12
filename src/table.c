@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "table.h"
-
+#include "globals.h"
 
 /* --------------------------------------------------------- */
 /* ATENÇÃO: Não será necessário modificar as funções abaixo! */
@@ -15,6 +15,11 @@ table_t *table_init(int number_of_tables, int seats_per_table)
         new_tables[i]._empty_seats = seats_per_table;
         new_tables[i]._max_seats = seats_per_table;
     }
+
+    /* Alteração permitida */
+    globals_set_number_of_tables(number_of_tables);
+    globals_set_seats_per_table(seats_per_table);
+    /* */
 
     return new_tables;
 }

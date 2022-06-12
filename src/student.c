@@ -34,8 +34,9 @@ void student_seat(student_t *self, table_t *table)
 {
     /* Insira sua lógica aqui */
     int i = 0;
-    // não é possivel usar config.tables
-    while (i < config.tables)
+    int number_of_tables = globals_get_number_of_tables();
+
+    while (i < number_of_tables)
     { // fica no loop olhando as mesas até achar uma com lugar vago
         if (table[i]._empty_seats > 0)
         {
@@ -47,7 +48,7 @@ void student_seat(student_t *self, table_t *table)
         }
         else
         {
-            i = (i + 1) % config.tables;
+            i = (i + 1) % number_of_tables;
         }
     }
 }
