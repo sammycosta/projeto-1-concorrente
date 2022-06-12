@@ -1,13 +1,13 @@
 #include <stdlib.h>
 #include "buffet.h"
 #include "config.h"
-#include "globals.c" // Tive que incluir pra inicializar mutexes
+
 
 void *buffet_run(void *arg)
-{
+{   
     int all_students_entered = FALSE;
-    buffet_t *self = (buffet_t *)arg;
-
+    buffet_t *self = (buffet_t*) arg;
+    
     /*  O buffet funciona enquanto houver alunos na fila externa. */
     while (all_students_entered == FALSE)
     {
@@ -23,11 +23,6 @@ void *buffet_run(void *arg)
 
 void buffet_init(buffet_t *self, int number_of_buffets)
 {
-
-    /* Aloca mutexes das filas */
-    pthread_mutex_t *queues_left = malloc(sizeof(pthread_mutex_t) * number_of_buffets);
-    pthread_mutex_t *queues_right = malloc(sizeof(pthread_mutex_t) * number_of_buffets);
-
     int i = 0, j = 0;
     for (i = 0; i < number_of_buffets; i++)
     {
@@ -35,31 +30,25 @@ void buffet_init(buffet_t *self, int number_of_buffets)
         self[i]._id = i;
 
         /* Inicia com 40 unidades de comida em cada bacia */
-        for (j = 0; j < 5; j++)
+        for(j = 0; j < 5; j++)
             self[i]._meal[j] = 40;
 
-        for (j = 0; j < 5; j++)
-        {
-            /* A fila esquerda do buffet possui cinco posições. */
+        for(j= 0; j< 5; j++){
+             /* A fila esquerda do buffet possui cinco posições. */
             self[i].queue_left[j] = 0;
             /* A fila esquerda do buffet possui cinco posições. */
             self[i].queue_right[j] = 0;
         }
 
-        pthread_mutex_init(&queues_left[i], NULL);  // Inicia mutexes filas à esquerda
-        pthread_mutex_init(&queues_right[i], NULL); // Inicia mutexes filas à direita
-
         pthread_create(&self[i].thread, NULL, buffet_run, &self[i]);
     }
-    // salvo mutexes alocados globalmente.
-    globals_set_queues_left(queues_left);
-    globals_set_queues_right(queues_right);
 }
+
 
 int buffet_queue_insert(buffet_t *self, student_t *student)
 {
     /* Se o estudante vai para a fila esquerda */
-    if (student->left_or_right == 'L')
+    if (student->left_or_right == 'L') 
     {
         /* Verifica se a primeira posição está vaga */
         if (!self[student->_id_buffet].queue_left[0])
@@ -71,7 +60,7 @@ int buffet_queue_insert(buffet_t *self, student_t *student)
         return FALSE;
     }
     else
-    { /* Se o estudante vai para a fila direita */
+    {   /* Se o estudante vai para a fila direita */
         if (!self[student->_id_buffet].queue_right[0])
         {
             /* Verifica se a primeira posição está vaga */
@@ -83,20 +72,20 @@ int buffet_queue_insert(buffet_t *self, student_t *student)
     }
 }
 
+
 void buffet_next_step(buffet_t *self, student_t *student)
 {
     /* Se estudante ainda precisa se servir de mais alguma coisa... */
     if (student->_buffet_position + 1 < 5)
-    { /* Está na fila esquerda? */
+    {    /* Está na fila esquerda? */
         if (student->left_or_right == 'L')
-        { /* Caminha para a posição seguinte da fila do buffet.*/
+        {   /* Caminha para a posição seguinte da fila do buffet.*/
             int position = student->_buffet_position;
             self[student->_id_buffet].queue_left[position] = 0;
             self[student->_id_buffet].queue_left[position + 1] = student->_id;
             student->_buffet_position = student->_buffet_position + 1;
-        }
-        else /* Está na fila direita? */
-        {    /* Caminha para a posição seguinte da fila do buffet.*/
+        }else /* Está na fila direita? */
+        {   /* Caminha para a posição seguinte da fila do buffet.*/
             int position = student->_buffet_position;
             self[student->_id_buffet].queue_right[position] = 0;
             self[student->_id_buffet].queue_right[position + 1] = student->_id;
@@ -116,22 +105,23 @@ void buffet_finalize(buffet_t *self, int number_of_buffets)
     {
         pthread_join(self[i].thread, NULL);
     }
-
+    
     /*Libera a memória.*/
     free(self);
 }
 
+
 void _log_buffet(buffet_t *self)
 {
     /* Prints do buffet */
-    int *ids_left = self->queue_left;
-    int *ids_right = self->queue_right;
+    int *ids_left = self->queue_left; 
+    int *ids_right = self->queue_right; 
 
-    printf("\n\n\u250F\u2501 Queue left: [ %d %d %d %d %d ]\n", ids_left[0], ids_left[1], ids_left[2], ids_left[3], ids_left[4]);
+    printf("\n\n\u250F\u2501 Queue left: [ %d %d %d %d %d ]\n", ids_left[0],ids_left[1],ids_left[2],ids_left[3],ids_left[4]);
     fflush(stdout);
     printf("\u2523\u2501 BUFFET %d = [RICE: %d/40 BEANS:%d/40 PLUS:%d/40 PROTEIN:%d/40 SALAD:%d/40]\n",
            self->_id, self->_meal[0], self->_meal[1], self->_meal[2], self->_meal[3], self->_meal[4]);
     fflush(stdout);
-    printf("\u2517\u2501 Queue right: [ %d %d %d %d %d ]\n", ids_right[0], ids_right[1], ids_right[2], ids_right[3], ids_right[4]);
+    printf("\u2517\u2501 Queue right: [ %d %d %d %d %d ]\n", ids_right[0],ids_right[1],ids_right[2],ids_right[3],ids_right[4]);
     fflush(stdout);
 }

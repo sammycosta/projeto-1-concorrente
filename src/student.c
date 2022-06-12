@@ -8,7 +8,7 @@
 #include "student.h"
 #include "config.h"
 #include "worker_gate.h"
-#include "globals.c" // MUDEI PARA C PARA ACESSAR O QUE CRIEI
+#include "globals.h"
 #include "table.h"
 
 sem_t olhar_mesas; // pra ter garantia nos valores globais das mesas
@@ -55,16 +55,6 @@ void student_serve(student_t *self)
 {
     /* Insira sua lógica aqui */
     buffet_t *buffet = globals_get_buffets();
-    pthread_mutex_t mutex_fila;
-    if (self->left_or_right == "L")
-    {
-        mutex_fila = globals_get_queues_left()[self->_id_buffet];
-    }
-    else
-    {
-        mutex_fila = globals_get_queues_right()[self->_id_buffet];
-    }
-
     while (self->_buffet_position < 5)
     {
         if (self->_wishes[self->_buffet_position] == 1)
@@ -79,9 +69,7 @@ void student_serve(student_t *self)
             // unlock
             // talvez ter outro lock pra caso esteja vazio, pra que tente de novo depois?
         }
-        pthread_mutex_lock(&mutex_fila);
         buffet_next_step(&buffet[self->_id_buffet], self); // precisa garantir que não tem ninguém na frente?
-        pthread_mutex_unlock(&mutex_fila);
     }
 }
 
