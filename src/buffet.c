@@ -15,6 +15,10 @@ void *buffet_run(void *arg)
         /* Máximo de porções por bacia (40 unidades). */
         _log_buffet(self);
 
+        // mesma coisa que o worker gate faz. Talvez alterar  all_students_entered para global
+        int number_students = globals_get_queue()->_length;
+        all_students_entered = number_students > 0 ? FALSE : TRUE;
+
         msleep(5000); /* Pode retirar este sleep quando implementar a solução! */
     }
 
