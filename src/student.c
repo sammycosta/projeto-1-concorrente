@@ -75,7 +75,21 @@ void student_serve(student_t *self)
             }
             // talvez ter outro lock pra caso esteja vazio, pra que tente de novo depois?
         }
-        buffet_next_step(&buffet[id_buffet], self); // precisa garantir que não tem ninguém na frente?
+
+        /* ALGORITMO DE SPINLOCK/BUSYSWAIT ENQUANTO OUTRA LÓGICA MELHOR É FEITA */
+        int position = self->_buffet_position;
+        if (self->left_or_right == 'L')
+        {
+            while (buffet[id_buffet].queue_left[position + 1] != 0)
+                ;
+            buffet_next_step(&buffet[id_buffet], self); // precisa garantir que não tem ninguém na frente?
+        }
+        else
+        {
+            while (buffet[id_buffet].queue_right[position + 1] != 0)
+                ;
+            buffet_next_step(&buffet[id_buffet], self);
+        }
     }
 }
 
