@@ -106,4 +106,10 @@ extern void globals_set_seats_per_table(int number);
  */
 extern int globals_get_seats_per_table();
 
+/**
+ * @brief Inicializa os mutexes por mesa (de modo global)
+ *
+ */
+extern int init_mutexes();
+
 #endif

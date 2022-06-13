@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "globals.h"
 #include "config.h"
+#include "semaphore.h"
 
 queue_t *students_queue = NULL;
 table_t *table = NULL;
@@ -10,6 +11,8 @@ int number_of_buffets = 0;
 int students_number = 0;
 int number_of_tables = 0;
 int seats_per_table = 0;
+
+extern pthread_mutex_t *pegar_cadeira; //variavel global, melhor fazer função?
 
 void globals_set_queue(queue_t *queue)
 {
@@ -81,6 +84,14 @@ int globals_get_seats_per_table()
     return seats_per_table;
 }
 
+void init_mutexes() //inicia o mutex das mesas 
+{
+    pthread_mutex_t *pegar_cadeira = malloc(sizeof(pegar_cadeira) * number_of_tables);
+    for (int i = 0; i < number_of_tables; i++) {
+        pthread_mutex_init(&(pegar_cadeira[i]), NULL);
+    }
+}
+
 /**
  * @brief Finaliza todas as variáveis globais que ainda não foram liberadas.
  *  Se criar alguma variável global que faça uso de mallocs, lembre-se sempre de usar o free dentro
@@ -96,6 +107,10 @@ void globals_finalize()
         { // destruindo mutex por bacia
             pthread_mutex_destroy(&buffets_ref[i].mutex_meals[j]);
         }
+    }
+
+    for (int i = 0; i < number_of_tables; i++) {
+        pthread_mutex_destroy(&(pegar_cadeira[i]));
     }
     /* */
     free(table);
