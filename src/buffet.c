@@ -16,7 +16,9 @@ void *buffet_run(void *arg)
         _log_buffet(self);
 
         // mesma coisa que o worker gate faz. Talvez alterar  all_students_entered para global
-        int number_students = globals_get_queue()->_length;
+        // int number_students = globals_get_queue()->_length;
+
+        int number_students = globals_get_students();
         all_students_entered = number_students > 0 ? FALSE : TRUE;
 
         msleep(5000); /* Pode retirar este sleep quando implementar a solução! */
@@ -27,7 +29,7 @@ void *buffet_run(void *arg)
 
 void buffet_init(buffet_t *self, int number_of_buffets)
 {
-    int i = 0, j = 0;
+    int i = 0, j = 0, a = 0;
     globals_set_number_of_buffets(number_of_buffets);
 
     for (i = 0; i < number_of_buffets; i++)
@@ -41,6 +43,12 @@ void buffet_init(buffet_t *self, int number_of_buffets)
             self[i]._meal[j] = 40;
             pthread_mutex_init(&self[i].mutex_meals[j], NULL);
         }
+        for (a = 0; a < 4; a++)
+        {
+            sem_init(&self[i].controle_fila_dir[a], 0, 1);
+            sem_init(&self[i].controle_fila_esq[a], 0, 1);
+        }
+
         for (j = 0; j < 5; j++)
         {
             /* A fila esquerda do buffet possui cinco posições. */
@@ -87,17 +95,21 @@ void buffet_next_step(buffet_t *self, student_t *student)
     { /* Está na fila esquerda? */
         if (student->left_or_right == 'L')
         { /* Caminha para a posição seguinte da fila do buffet.*/
+            sem_wait(&(self->controle_fila_esq[student->_buffet_position]));
             int position = student->_buffet_position;
             self[student->_id_buffet].queue_left[position] = 0;
             self[student->_id_buffet].queue_left[position + 1] = student->_id;
             student->_buffet_position = student->_buffet_position + 1;
+            sem_post(&(self->controle_fila_dir[student->_buffet_position]));
         }
         else /* Está na fila direita? */
         {    /* Caminha para a posição seguinte da fila do buffet.*/
+            sem_wait(&(self->controle_fila_dir[student->_buffet_position]));
             int position = student->_buffet_position;
             self[student->_id_buffet].queue_right[position] = 0;
             self[student->_id_buffet].queue_right[position + 1] = student->_id;
             student->_buffet_position = student->_buffet_position + 1;
+            sem_post(&(self->controle_fila_dir[student->_buffet_position]));
         }
     }
 }

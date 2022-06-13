@@ -62,7 +62,7 @@ void globals_set_number_of_buffets(int number)
 
 int globals_get_number_of_buffets()
 {
-    return students_number;
+    return number_of_buffets;
 }
 
 void globals_set_number_of_tables(int number)

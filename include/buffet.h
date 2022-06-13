@@ -2,6 +2,7 @@
 #define __buffet_H__
 
 #include <pthread.h>
+#include <semaphore.h>
 
 #include "queue.h"
 
@@ -14,6 +15,8 @@ typedef struct buffet
     int queue_right[5];
 
     pthread_mutex_t mutex_meals[5]; // Número fixo, então var estática?
+    sem_t controle_fila_esq[4];
+    sem_t controle_fila_dir[4];
 
     pthread_t thread; /* Thread do buffet   */
 } buffet_t;
