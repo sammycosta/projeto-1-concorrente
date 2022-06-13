@@ -9,20 +9,22 @@ struct dados_buffet
 {
     buffet_t buffet_vazio;
     int bacia;
-}; // precisa de uma struct? É melhor fazer sem?
+}; 
+
+struct dados_buffet *dados_buffet;
 
 void *chef_run()
 {
     // Vai embora quando todos estudantes se serviram
-    struct dados_buffet *dados_buffet = (struct dados_buffet *)(malloc(sizeof(struct dados_buffet)));
+    dados_buffet = (struct dados_buffet *)(malloc(sizeof(struct dados_buffet)));
     while (TRUE)
     {
         msleep(5000);                  /* Pode retirar este sleep quando implementar a solução! */
-        chef_check_food(dados_buffet); /* Checa bacias de todos buffets */
+        chef_check_food(); /* Checa bacias de todos buffets */
         if (dados_buffet->bacia != -1)
         {
             /* Bacia recebeu número de bacia vazia */
-            chef_put_food(dados_buffet);
+            chef_put_food();
         }
     }
     free(dados_buffet);
@@ -30,14 +32,14 @@ void *chef_run()
 }
 
 /* Adiciona 40 de comida na bacia vazia utilizando a struct */
-void chef_put_food(struct dados_buffet *dados)
+void chef_put_food()
 {
-    dados->buffet_vazio._meal[dados->bacia] = 40; // acho que não precisa mutex!
+    dados_buffet->buffet_vazio._meal[dados_buffet->bacia] = 40; // acho que não precisa mutex!
 }
 
 /* Checa todas bacias de todos os buffets e altera struct caso encontrar uma vazia.
 Caso não exista bacia vazia, dados->bacia recebe -1 */
-void chef_check_food(struct dados_buffet *dados)
+void chef_check_food()
 {
     buffet_t *buffets = globals_get_buffets();
     int number_of_buffets = globals_get_number_of_buffets();
@@ -48,13 +50,13 @@ void chef_check_food(struct dados_buffet *dados)
         {
             if (buffets[i]._meal[bacia] == 0)
             {
-                dados->buffet_vazio = buffets[i];
-                dados->bacia = bacia;
+                dados_buffet->buffet_vazio = buffets[i];
+                dados_buffet->bacia = bacia;
                 return;
             }
             else
             {
-                dados->bacia = -1;
+                dados_buffet->bacia = -1;
             }
         }
     }
