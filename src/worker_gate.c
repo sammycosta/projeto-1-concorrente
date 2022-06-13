@@ -7,6 +7,8 @@
 
 pthread_mutex_t catraca, sai_fila;
 
+student_t *primeiro_estudante_var;
+
 /* Modifica all_students_entered para TRUE quando não houver estudantes na fila externa */
 void worker_gate_look_queue(int *all_students_entered)
 {
@@ -22,6 +24,7 @@ void worker_gate_remove_student()
     queue_remove(fila);
     int number_students = globals_get_students() - 1; // acho que não dá erro por ser um por vez
     globals_set_students(number_students);
+    printf("%d REMOVI UM ESTUDANTE\n", globals_get_students());
     // student_t *estudante_saindo = queue_remove(fila);
 }
 
@@ -45,6 +48,7 @@ char worker_gate_look_buffet()
             student_t *primeiro_estudante = globals_get_queue()->_first->_student;
             primeiro_estudante->_id_buffet = buffets[i]._id;
             primeiro_estudante->left_or_right = 'L';
+            primeiro_estudante_var = primeiro_estudante;
             pthread_mutex_unlock(&catraca);
             return 'L';
         }
@@ -53,6 +57,7 @@ char worker_gate_look_buffet()
             student_t *primeiro_estudante = globals_get_queue()->_first->_student;
             primeiro_estudante->_id_buffet = buffets[i]._id;
             primeiro_estudante->left_or_right = 'R';
+            primeiro_estudante_var = primeiro_estudante;
             pthread_mutex_unlock(&catraca);
             return 'R';
         }
@@ -92,6 +97,7 @@ void worker_gate_init(worker_gate_t *self)
     pthread_mutex_init(&sai_fila, NULL);
     pthread_mutex_lock(&catraca);  // INICIA LOCKADO. LOOK BUFFET DEVE DAR UNLOCK
     pthread_mutex_lock(&sai_fila); // INICIA LOCKADO. ESTUDANTE DEVE DAR UNLOCK
+    init_mutexes();
 
     printf("entra aqui: worker gate init criou mutexes \n");
 
@@ -111,13 +117,13 @@ void worker_gate_insert_queue_buffet(student_t *student)
 {
     // O ESTUDANTE QUE TENTOU SER INSERIDO É O PRIMEIRO DA FILA!
     // Então, caso catraca livre, ele pode ser inserido.
-    if (globals_get_queue()->_first == NULL)
+    if (primeiro_estudante_var == NULL)
     {
-        printf("é nulo\n");
         return;
     }
-
-    if (student->_id == (globals_get_queue()->_first->_student->_id))
+    // student_t *primeiro_estudante = globals_get_queue()->_first->_student;
+    // printf("%d id do atual primeiro\n", primeiro_estudante->_id);
+    if (student->_id == primeiro_estudante_var->_id)
     {
         printf("entra aqui: é o primeiro estudante!\n");
         buffet_t *buffets = globals_get_buffets();

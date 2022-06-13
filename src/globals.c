@@ -13,7 +13,7 @@ int students_number = 0;
 int number_of_tables = 0;
 int seats_per_table = 0;
 
-extern pthread_mutex_t *pegar_cadeira; // variavel global, melhor fazer função?
+// extern pthread_mutex_t *pegar_cadeira; // variavel global, melhor fazer função?
 
 void globals_set_queue(queue_t *queue)
 {
@@ -87,7 +87,7 @@ int globals_get_seats_per_table()
 
 void init_mutexes() // inicia o mutex das mesas
 {
-    pthread_mutex_t *pegar_cadeira = malloc(sizeof(pegar_cadeira) * number_of_tables);
+    pthread_mutex_t *pegar_cadeira = (pthread_mutex_t *)(malloc(sizeof(pthread_mutex_t) * number_of_tables));
     for (int i = 0; i < number_of_tables; i++)
     {
         pthread_mutex_init(&(pegar_cadeira[i]), NULL);

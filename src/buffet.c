@@ -2,6 +2,7 @@
 #include "buffet.h"
 #include "config.h"
 #include "globals.h"
+#include <semaphore.h>
 
 void *buffet_run(void *arg)
 {
@@ -95,21 +96,21 @@ void buffet_next_step(buffet_t *self, student_t *student)
     { /* Está na fila esquerda? */
         if (student->left_or_right == 'L')
         { /* Caminha para a posição seguinte da fila do buffet.*/
-            sem_wait(&(self->controle_fila_esq[student->_buffet_position]));
+            // sem_wait(&(self->controle_fila_esq[student->_buffet_position]));
             int position = student->_buffet_position;
             self[student->_id_buffet].queue_left[position] = 0;
             self[student->_id_buffet].queue_left[position + 1] = student->_id;
             student->_buffet_position = student->_buffet_position + 1;
-            sem_post(&(self->controle_fila_dir[student->_buffet_position]));
+            // sem_post(&(self->controle_fila_dir[student->_buffet_position]));
         }
         else /* Está na fila direita? */
         {    /* Caminha para a posição seguinte da fila do buffet.*/
-            sem_wait(&(self->controle_fila_dir[student->_buffet_position]));
+            // sem_wait(&(self->controle_fila_dir[student->_buffet_position]));
             int position = student->_buffet_position;
             self[student->_id_buffet].queue_right[position] = 0;
             self[student->_id_buffet].queue_right[position + 1] = student->_id;
             student->_buffet_position = student->_buffet_position + 1;
-            sem_post(&(self->controle_fila_dir[student->_buffet_position]));
+            // sem_post(&(self->controle_fila_dir[student->_buffet_position]));
         }
     }
 }

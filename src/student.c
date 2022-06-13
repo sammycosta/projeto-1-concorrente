@@ -20,9 +20,6 @@ void *student_run(void *arg)
     queue_t *fila_de_fora = globals_get_queue();
     queue_insert(fila_de_fora, self);
 
-    int number_students = globals_get_queue()->_length;
-    printf("%d student run lenght fila fora\n", number_students);
-
     while (self->_buffet_position == -1)
     {
         // Fica tentando até estar no buffet.
@@ -83,10 +80,10 @@ void student_serve(student_t *self)
             // talvez ter outro lock pra caso esteja vazio, pra que tente de novo depois?
         }
 
-        buffet_next_step(&buffet[id_buffet], self);
+        // buffet_next_step(&buffet[id_buffet], self);
 
         /* ALGORITMO DE SPINLOCK/BUSYSWAIT ENQUANTO OUTRA LÓGICA MELHOR É FEITA */
-        /* int position = self->_buffet_position;
+        int position = self->_buffet_position;
         if (position == 4)
         {
             break;
@@ -102,7 +99,7 @@ void student_serve(student_t *self)
             while (buffet[id_buffet].queue_right[position + 1] != 0)
                 ;
             buffet_next_step(&buffet[id_buffet], self);
-        } */
+        }
     }
 }
 

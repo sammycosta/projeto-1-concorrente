@@ -1,0 +1,27 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/samantha/Downloads/projeto-1-concorrente'
+make -C /home/samantha/Downloads/projeto-1-concorrente/src all
+make[1]: Entering directory '/home/samantha/Downloads/projeto-1-concorrente/src'
+echo [CC] queue.o
+cc -Wall -Werror -std=c11 -pthread -D_POSIX_C_SOURCE=200809L  -fsanitize=address -fsanitize=undefined -I /home/samantha/Downloads/projeto-1-concorrente/include  -D NDEBUG queue.c -c -o queue.o
+echo [CC] buffet.o
+cc -Wall -Werror -std=c11 -pthread -D_POSIX_C_SOURCE=200809L  -fsanitize=address -fsanitize=undefined -I /home/samantha/Downloads/projeto-1-concorrente/include  -D NDEBUG buffet.c -c -o buffet.o
+echo [CC] worker_gate.o
+cc -Wall -Werror -std=c11 -pthread -D_POSIX_C_SOURCE=200809L  -fsanitize=address -fsanitize=undefined -I /home/samantha/Downloads/projeto-1-concorrente/include  -D NDEBUG worker_gate.c -c -o worker_gate.o
+echo [CC] config.o
+cc -Wall -Werror -std=c11 -pthread -D_POSIX_C_SOURCE=200809L  -fsanitize=address -fsanitize=undefined -I /home/samantha/Downloads/projeto-1-concorrente/include  -D NDEBUG config.c -c -o config.o
+echo [CC] table.o
+cc -Wall -Werror -std=c11 -pthread -D_POSIX_C_SOURCE=200809L  -fsanitize=address -fsanitize=undefined -I /home/samantha/Downloads/projeto-1-concorrente/include  -D NDEBUG table.c -c -o table.o
+echo [CC] student.o
+cc -Wall -Werror -std=c11 -pthread -D_POSIX_C_SOURCE=200809L  -fsanitize=address -fsanitize=undefined -I /home/samantha/Downloads/projeto-1-concorrente/include  -D NDEBUG student.c -c -o student.o
+echo [CC] main.o
+cc -Wall -Werror -std=c11 -pthread -D_POSIX_C_SOURCE=200809L  -fsanitize=address -fsanitize=undefined -I /home/samantha/Downloads/projeto-1-concorrente/include  -D NDEBUG main.c -c -o main.o
+echo [CC] globals.o
+cc -Wall -Werror -std=c11 -pthread -D_POSIX_C_SOURCE=200809L  -fsanitize=address -fsanitize=undefined -I /home/samantha/Downloads/projeto-1-concorrente/include  -D NDEBUG globals.c -c -o globals.o
+echo [CC] chef.o
+cc -Wall -Werror -std=c11 -pthread -D_POSIX_C_SOURCE=200809L  -fsanitize=address -fsanitize=undefined -I /home/samantha/Downloads/projeto-1-concorrente/include  -D NDEBUG chef.c -c -o chef.o
+echo [CC] program
+cc  -o /home/samantha/Downloads/projeto-1-concorrente/program queue.o buffet.o worker_gate.o config.o table.o student.o main.o globals.o chef.o -lm -lpthread -fsanitize=address -lubsan
+make[1]: Leaving directory '/home/samantha/Downloads/projeto-1-concorrente/src'
+make: Leaving directory '/home/samantha/Downloads/projeto-1-concorrente'
+ 
