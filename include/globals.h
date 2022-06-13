@@ -110,6 +110,19 @@ extern int globals_get_seats_per_table();
  * @brief Inicializa os mutexes por mesa (de modo global)
  *
  */
-extern int init_mutexes();
+extern void init_mutexes();
 
+/**
+ * @brief Insere o array de mutexes pegar_cadeira (de modo global)
+ *
+ */
+extern void globals_set_mutex_seats(pthread_mutex_t *number);
+
+/**
+ * @brief Retorna o array de mutexes pegar_cadeira (de modo global)
+ *
+ * @return pthread_mutex_t*
+ */
+
+extern pthread_mutex_t *globals_get_mutex_seats();
 #endif

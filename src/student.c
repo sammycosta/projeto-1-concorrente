@@ -10,8 +10,6 @@
 #include "worker_gate.h"
 #include "globals.h"
 #include "table.h"
-#include "globals.c" //  pra pegar o mutex das mesas
-
 
 void *student_run(void *arg)
 {
@@ -34,19 +32,19 @@ void student_seat(student_t *self, table_t *table)
     /* Insira sua lógica aqui */
     int i = 0;
     int number_of_tables = globals_get_number_of_tables();
-
+    pthread_mutex_t *pegar_cadeira = globals_get_mutex_seats();
     while (i < number_of_tables)
     { // fica no loop olhando as mesas até achar uma com lugar vago
-        pthread_lock(&pegar_cadeira[i]); 
-        if (table[i]._empty_seats > 0) // garante que o valor está certo (alguma ideia melhor?) 
-        {            
+        pthread_mutex_lock(&pegar_cadeira[i]);
+        if (table[i]._empty_seats > 0) // garante que o valor está certo (alguma ideia melhor?)
+        {
             table[i]._empty_seats--;
             pthread_mutex_unlock(&pegar_cadeira[i]);
             self->_id_buffet = table[i]._id; // salvando a mesa onde antes estava o buffet
             return;                          //(não tem variável pra mesa)
         }
         else
-        {   
+        {
             pthread_mutex_unlock(&pegar_cadeira[i]);
             i = (i + 1) % number_of_tables;
         }
@@ -97,7 +95,8 @@ void student_serve(student_t *self)
 void student_leave(student_t *self, table_t *table)
 {
     /* Insira sua lógica aqui */
-    pthread_mutex_lock(&pegar_cadeira[self->_id_buffet]);           
+    pthread_mutex_t *pegar_cadeira = globals_get_mutex_seats();
+    pthread_mutex_lock(&pegar_cadeira[self->_id_buffet]);
     table[self->_id_buffet]._empty_seats++; // libera a cadeira
     pthread_mutex_unlock(&pegar_cadeira[self->_id_buffet]);
 }
