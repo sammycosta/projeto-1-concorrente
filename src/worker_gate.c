@@ -123,6 +123,6 @@ void worker_gate_insert_queue_buffet(student_t *student)
         buffet_t *buffets = globals_get_buffets();
         pthread_mutex_lock(&catraca);
         buffet_queue_insert(&buffets[student->_id_buffet], student);
-        // pthread_mutex_unlock(&sai_fila); // ELE JÁ ENTROU, POSSO REMOVER ele DA FILA!
+        pthread_mutex_unlock(&sai_fila); // ELE JÁ ENTROU, POSSO REMOVER ele DA FILA!
     }
 }

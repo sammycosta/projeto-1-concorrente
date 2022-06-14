@@ -35,6 +35,7 @@ void *student_run(void *arg)
 void student_seat(student_t *self, table_t *table)
 {
     /* Insira sua lógica aqui */
+    printf("estudante %d ENTROU NA FUNÇÃO DE SENTAR", self->_id);
     int i = 0;
     int number_of_tables = globals_get_number_of_tables();
     pthread_mutex_t *pegar_cadeira = globals_get_mutex_seats();
@@ -81,7 +82,6 @@ void student_serve(student_t *self)
             }
             // talvez ter outro lock pra caso esteja vazio, pra que tente de novo depois?
         }
-        printf("estudante %d se serviu em %d", self->_id, self->_buffet_position);
         buffet_next_step(&buffet[id_buffet], self);
 
         /* ALGORITMO DE SPINLOCK/BUSYSWAIT ENQUANTO OUTRA LÓGICA MELHOR É FEITA */
@@ -103,6 +103,7 @@ void student_serve(student_t *self)
             buffet_next_step(&buffet[id_buffet], self);
         }*/
     }
+    printf("estudante %d SAIU DO WHILE DE SERVE\n", self->_id);
 }
 
 void student_leave(student_t *self, table_t *table)

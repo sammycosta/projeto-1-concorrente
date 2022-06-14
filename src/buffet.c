@@ -97,13 +97,13 @@ void buffet_next_step(buffet_t *self, student_t *student)
         if (student->left_or_right == 'L')
         { /* Caminha para a posição seguinte da fila do buffet.*/
             sem_wait(&(self->controle_fila_esq[student->_buffet_position]));
-            printf("semaforo bonitinho");
+            printf("semaforo bonitinho\n");
             int position = student->_buffet_position;
             self[student->_id_buffet].queue_left[position] = 0;
             self[student->_id_buffet].queue_left[position + 1] = student->_id;
             student->_buffet_position = student->_buffet_position + 1;
 
-            printf("estudante %d andou na fila", student->_id);
+            printf("estudante %d andou na fila\n", student->_id);
             sem_post(&(self->controle_fila_esq[student->_buffet_position - 1]));
         }
         else /* Está na fila direita? */
@@ -127,6 +127,7 @@ void buffet_next_step(buffet_t *self, student_t *student)
         {
             sem_post(&(self->controle_fila_dir[student->_buffet_position - 1]));
         }
+        student->_buffet_position = student->_buffet_position + 1; // assim ele sai?
     }
 }
 
