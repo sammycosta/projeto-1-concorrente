@@ -21,11 +21,10 @@ void worker_gate_look_queue(int *all_students_entered)
 void worker_gate_remove_student()
 {
     queue_t *fila = globals_get_queue();
-    queue_remove(fila);
+    primeiro_estudante_var = queue_remove(fila);
     int number_students = globals_get_students() - 1; // acho que não dá erro por ser um por vez
     globals_set_students(number_students);
     printf("%d REMOVI UM ESTUDANTE\n", globals_get_students());
-    // student_t *estudante_saindo = queue_remove(fila);
 }
 
 /* Checa todos os buffets, encontra primeiro vazio;
@@ -45,19 +44,17 @@ char worker_gate_look_buffet()
         if (!buffets[i].queue_left[0])
         { // precisa mutex?
             // preenche estudante e libera sua passagem
-            student_t *primeiro_estudante = globals_get_queue()->_first->_student;
-            primeiro_estudante->_id_buffet = buffets[i]._id;
-            primeiro_estudante->left_or_right = 'L';
-            primeiro_estudante_var = primeiro_estudante;
+            worker_gate_remove_student(); // seta primeiro estudante var
+            primeiro_estudante_var->_id_buffet = buffets[i]._id;
+            primeiro_estudante_var->left_or_right = 'L';
             pthread_mutex_unlock(&catraca);
             return 'L';
         }
         else if (!buffets[i].queue_right[0])
         {
-            student_t *primeiro_estudante = globals_get_queue()->_first->_student;
-            primeiro_estudante->_id_buffet = buffets[i]._id;
-            primeiro_estudante->left_or_right = 'R';
-            primeiro_estudante_var = primeiro_estudante;
+            worker_gate_remove_student(); // seta primeiro estudante var
+            primeiro_estudante_var->_id_buffet = buffets[i]._id;
+            primeiro_estudante_var->left_or_right = 'L';
             pthread_mutex_unlock(&catraca);
             return 'R';
         }
@@ -78,12 +75,9 @@ void *worker_gate_run(void *arg)
     {
         worker_gate_look_queue(&all_students_entered); // Decide se finaliza thread.
         fila_livre = worker_gate_look_buffet();        // unlock catraca ou não
-
-        if (fila_livre == 'L' || fila_livre == 'R')
+        if (fila_livre != 'N')
         {
-            // look buffet executou, garantindo um buffet livre
             pthread_mutex_lock(&sai_fila); // Só sai daqui se estudante rodou função insert
-            worker_gate_remove_student();
         }
         msleep(5000); /* Pode retirar este sleep quando implementar a solução! */
     }
@@ -129,6 +123,6 @@ void worker_gate_insert_queue_buffet(student_t *student)
         buffet_t *buffets = globals_get_buffets();
         pthread_mutex_lock(&catraca);
         buffet_queue_insert(&buffets[student->_id_buffet], student);
-        pthread_mutex_unlock(&sai_fila); // ELE JÁ ENTROU, POSSO REMOVER ele DA FILA!
+        // pthread_mutex_unlock(&sai_fila); // ELE JÁ ENTROU, POSSO REMOVER ele DA FILA!
     }
 }

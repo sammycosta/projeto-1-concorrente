@@ -54,6 +54,7 @@ void student_seat(student_t *self, table_t *table)
             i = (i + 1) % number_of_tables;
         }
     }
+    printf("estudante %d sentou", self->_id);
 }
 
 void student_serve(student_t *self)
@@ -68,7 +69,7 @@ void student_serve(student_t *self)
         {
             // LEMBRAR. ESTUDANTES DA MESMA FILA NÃO PODEM PEGAR A MESMA BACIA (USAR L/R)
             // MAS ESTUDANTES DE FILAS DIFERENTES PODEM NA MESMA BACIA!
-            
+
             if (buffet[id_buffet]._meal[self->_buffet_position] > 0)
             {
                 // lock no mutex da bacia (um mutex pra cada bacia, de cada buffet)
@@ -80,7 +81,7 @@ void student_serve(student_t *self)
             }
             // talvez ter outro lock pra caso esteja vazio, pra que tente de novo depois?
         }
-
+        printf("estudante %d se serviu em %d", self->_id, self->_buffet_position);
         buffet_next_step(&buffet[id_buffet], self);
 
         /* ALGORITMO DE SPINLOCK/BUSYSWAIT ENQUANTO OUTRA LÓGICA MELHOR É FEITA */

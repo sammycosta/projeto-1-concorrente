@@ -102,8 +102,9 @@ void buffet_next_step(buffet_t *self, student_t *student)
             self[student->_id_buffet].queue_left[position] = 0;
             self[student->_id_buffet].queue_left[position + 1] = student->_id;
             student->_buffet_position = student->_buffet_position + 1;
-            sem_post(&(self->controle_fila_esq[student->_buffet_position-1]));
-            
+
+            printf("estudante %d andou na fila", student->_id);
+            sem_post(&(self->controle_fila_esq[student->_buffet_position - 1]));
         }
         else /* Está na fila direita? */
         {    /* Caminha para a posição seguinte da fila do buffet.*/
@@ -112,16 +113,19 @@ void buffet_next_step(buffet_t *self, student_t *student)
             self[student->_id_buffet].queue_right[position] = 0;
             self[student->_id_buffet].queue_right[position + 1] = student->_id;
             student->_buffet_position = student->_buffet_position + 1;
-            sem_post(&(self->controle_fila_dir[student->_buffet_position-1]));
-            
+            printf("estudante %d andou na fila", student->_id);
+            sem_post(&(self->controle_fila_dir[student->_buffet_position - 1]));
         }
     }
-    else {
-        if (student->left_or_right == 'L') 
+    else
+    {
+        if (student->left_or_right == 'L')
         {
-            sem_post(&(self->controle_fila_esq[student->_buffet_position -1]));
-        } else {
-            sem_post(&(self->controle_fila_dir[student->_buffet_position-1]));
+            sem_post(&(self->controle_fila_esq[student->_buffet_position - 1]));
+        }
+        else
+        {
+            sem_post(&(self->controle_fila_dir[student->_buffet_position - 1]));
         }
     }
 }
