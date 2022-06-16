@@ -16,15 +16,19 @@ void *student_run(void *arg)
     student_t *self = (student_t *)arg;
     table_t *tables = globals_get_table();
 
+    /* Inicio um mutex trancado -> talvez usar semáforo para isso. */
+    pthread_mutex_init(&self->mutex, NULL);
+    pthread_mutex_lock(&self->mutex);
+
     /* inserindo pq nao achei local que fizesse isso */
+    // talvez seja necessário proteger a inserção com um mutex.
     queue_t *fila_de_fora = globals_get_queue();
     queue_insert(fila_de_fora, self);
 
-    while (self->_buffet_position == -1)
-    {
-        // Fica tentando até estar no buffet.
-        worker_gate_insert_queue_buffet(self);
-    }
+    pthread_mutex_lock(&self->mutex);      // protejo a entrada dele no buffet
+    worker_gate_insert_queue_buffet(self); // só passa quando recebe o unlock
+
+    pthread_mutex_lock(&self->mutex); // só se serve após inserção no buffet terminar
     student_serve(self);
     student_seat(self, tables);
     student_leave(self, tables);
@@ -48,7 +52,7 @@ void student_seat(student_t *self, table_t *table)
             pthread_mutex_unlock(&pegar_cadeira[i]);
             self->_id_buffet = table[i]._id; // salvando a mesa onde antes estava o buffet
             printf("\nestudante %d sentou", self->_id);
-            return;                          //(não tem variável pra mesa)
+            return; //(não tem variável pra mesa)
         }
         else
         {
@@ -56,7 +60,6 @@ void student_seat(student_t *self, table_t *table)
             i = (i + 1) % number_of_tables;
         }
     }
-    printf("estudante %d sentou", self->_id);
 }
 
 void student_serve(student_t *self)
@@ -72,18 +75,19 @@ void student_serve(student_t *self)
             // LEMBRAR. ESTUDANTES DA MESMA FILA NÃO PODEM PEGAR A MESMA BACIA (USAR L/R)
             // MAS ESTUDANTES DE FILAS DIFERENTES PODEM NA MESMA BACIA!
 
-            //if (buffet[id_buffet]._meal[self->_buffet_position] > 0)
+            // if (buffet[id_buffet]._meal[self->_buffet_position] > 0)
             //{
-                sem_wait(&buffet[id_buffet].sem_meals[self->_buffet_position]);
-                // lock no mutex da bacia (um mutex pra cada bacia, de cada buffet)
-                pthread_mutex_lock(&buffet[id_buffet].mutex_meals[self->_buffet_position]);
+            sem_wait(&buffet[id_buffet].sem_meals[self->_buffet_position]);
+            // lock no mutex da bacia (um mutex pra cada bacia, de cada buffet)
+            pthread_mutex_lock(&buffet[id_buffet].mutex_meals[self->_buffet_position]);
 
-                buffet[id_buffet]._meal[self->_buffet_position] -= 1;
+            buffet[id_buffet]._meal[self->_buffet_position] -= 1;
 
-                pthread_mutex_unlock(&buffet[id_buffet].mutex_meals[self->_buffet_position]);
+            pthread_mutex_unlock(&buffet[id_buffet].mutex_meals[self->_buffet_position]);
             //}
             // talvez ter outro lock pra caso esteja vazio, pra que tente de novo depois?
         }
+        msleep(10000); // tempo de se servir
         buffet_next_step(&buffet[id_buffet], self);
 
         /* ALGORITMO DE SPINLOCK/BUSYSWAIT ENQUANTO OUTRA LÓGICA MELHOR É FEITA */
@@ -111,10 +115,14 @@ void student_serve(student_t *self)
 void student_leave(student_t *self, table_t *table)
 {
     /* Insira sua lógica aqui */
+    msleep(10000); // tempo de comer
     pthread_mutex_t *pegar_cadeira = globals_get_mutex_seats();
     pthread_mutex_lock(&pegar_cadeira[self->_id_buffet]);
     table[self->_id_buffet]._empty_seats++; // libera a cadeira
     pthread_mutex_unlock(&pegar_cadeira[self->_id_buffet]);
+
+    pthread_mutex_destroy(&self->mutex);
+    printf("estudante %d foi embora", self->_id);
 }
 
 /* --------------------------------------------------------- */

@@ -7,6 +7,7 @@ queue_t *students_queue = NULL;
 table_t *table = NULL;
 buffet_t *buffets_ref = NULL;
 pthread_mutex_t *pegar_cadeira;
+pthread_mutex_t sai_fila;
 
 int number_of_buffets = 0;
 int students_number = 0;
@@ -87,6 +88,9 @@ int globals_get_seats_per_table()
 
 void init_mutexes() // inicia o mutex das mesas
 {
+    pthread_mutex_init(&sai_fila, NULL);
+    pthread_mutex_lock(&sai_fila);
+
     pthread_mutex_t *pegar_cadeira = (pthread_mutex_t *)(malloc(sizeof(pthread_mutex_t) * number_of_tables));
     for (int i = 0; i < number_of_tables; i++)
     {
@@ -98,12 +102,18 @@ void init_mutexes() // inicia o mutex das mesas
 
 void globals_set_mutex_seats(pthread_mutex_t *array)
 {
+    // não sei se estou usando essa global, checar com calma dps
     pegar_cadeira = array;
 }
 
 pthread_mutex_t *globals_get_mutex_seats()
 {
     return pegar_cadeira;
+}
+
+pthread_mutex_t *globals_get_mutex_gate()
+{
+    return &sai_fila;
 }
 
 /**
@@ -115,6 +125,9 @@ void globals_finalize()
 {
 
     /* Destruir mutexes aqui por enquanto */
+
+    pthread_mutex_destroy(&sai_fila);
+
     for (int i = 0; i < number_of_buffets; i++)
     {
         for (int j = 0; j < 5; j++)

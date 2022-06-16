@@ -73,8 +73,13 @@ int buffet_queue_insert(buffet_t *self, student_t *student)
         {
             self[student->_id_buffet].queue_left[0] = student->_id;
             student->_buffet_position = 0;
+            pthread_mutex_unlock(&student->mutex);                  // libero student_serve
+            pthread_mutex_t *mutex_gate = globals_get_mutex_gate(); // pego end do sai_fila
+            pthread_mutex_unlock(mutex_gate);
+            printf("unlockei o sai fila\n");
             return TRUE;
         }
+        printf("falhou entrar \n");
         return FALSE;
     }
     else
@@ -84,8 +89,14 @@ int buffet_queue_insert(buffet_t *self, student_t *student)
             /* Verifica se a primeira posição está vaga */
             self[student->_id_buffet].queue_right[0] = student->_id;
             student->_buffet_position = 0;
+            pthread_mutex_unlock(&student->mutex);                  // libero student_serve
+            pthread_mutex_t *mutex_gate = globals_get_mutex_gate(); // pego end do sai_fila
+            pthread_mutex_unlock(mutex_gate);
+            printf("unlockei o sai fila\n");
+
             return TRUE;
         }
+        printf("falhou entrar \n");
         return FALSE;
     }
 }
@@ -120,6 +131,7 @@ void buffet_next_step(buffet_t *self, student_t *student)
     }
     else
     {
+        // lembrar que tenho que zerar a pos quando ele vai ir embora tmb?
         if (student->left_or_right == 'L')
         {
             sem_post(&(self->controle_fila_esq[student->_buffet_position - 1]));

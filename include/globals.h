@@ -125,4 +125,9 @@ extern void globals_set_mutex_seats(pthread_mutex_t *number);
  */
 
 extern pthread_mutex_t *globals_get_mutex_seats();
+
+// mutex
+
+extern pthread_mutex_t *globals_get_mutex_gate();
+
 #endif
