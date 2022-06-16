@@ -43,6 +43,7 @@ void buffet_init(buffet_t *self, int number_of_buffets)
         {
             self[i]._meal[j] = 40;
             pthread_mutex_init(&self[i].mutex_meals[j], NULL);
+            sem_init(&self[i].sem_meals[i], 0, 40);
         }
         for (a = 0; a < 4; a++)
         {

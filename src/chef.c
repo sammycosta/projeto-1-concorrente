@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <semaphore.h>
 
 #include "chef.h"
 #include "config.h"
@@ -41,6 +42,9 @@ void chef_put_food()
 {
     buffet_t *buffets = globals_get_buffets();
     buffets[dados_buffet.buffet_vazio]._meal[dados_buffet.bacia] = 40; // acho que não precisa mutex!
+    for (int i = 0; i < 40; i ++) {
+        sem_post(&buffets[dados_buffet.buffet_vazio].sem_meals[dados_buffet.bacia]);
+    }
 }
 
 /* Checa todas bacias de todos os buffets e altera struct caso encontrar uma vazia.

@@ -47,6 +47,7 @@ void student_seat(student_t *self, table_t *table)
             table[i]._empty_seats--;
             pthread_mutex_unlock(&pegar_cadeira[i]);
             self->_id_buffet = table[i]._id; // salvando a mesa onde antes estava o buffet
+            printf("\nestudante %d sentou", self->_id);
             return;                          //(não tem variável pra mesa)
         }
         else
@@ -71,15 +72,16 @@ void student_serve(student_t *self)
             // LEMBRAR. ESTUDANTES DA MESMA FILA NÃO PODEM PEGAR A MESMA BACIA (USAR L/R)
             // MAS ESTUDANTES DE FILAS DIFERENTES PODEM NA MESMA BACIA!
 
-            if (buffet[id_buffet]._meal[self->_buffet_position] > 0)
-            {
+            //if (buffet[id_buffet]._meal[self->_buffet_position] > 0)
+            //{
+                sem_wait(&buffet[id_buffet].sem_meals[self->_buffet_position]);
                 // lock no mutex da bacia (um mutex pra cada bacia, de cada buffet)
                 pthread_mutex_lock(&buffet[id_buffet].mutex_meals[self->_buffet_position]);
 
                 buffet[id_buffet]._meal[self->_buffet_position] -= 1;
 
                 pthread_mutex_unlock(&buffet[id_buffet].mutex_meals[self->_buffet_position]);
-            }
+            //}
             // talvez ter outro lock pra caso esteja vazio, pra que tente de novo depois?
         }
         buffet_next_step(&buffet[id_buffet], self);
