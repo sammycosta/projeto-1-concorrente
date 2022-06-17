@@ -78,6 +78,11 @@ void student_serve(student_t *self)
             // if (buffet[id_buffet]._meal[self->_buffet_position] > 0)
             //{
             sem_wait(&buffet[id_buffet].sem_meals[self->_buffet_position]);
+            /*int *val = (int *)(malloc(sizeof(int)));
+            sem_getvalue(&buffet[id_buffet].sem_meals[self->_buffet_position], val);
+            printf("\nsem buffet %d, %d: %d\n", id_buffet, self->_buffet_position, *val);
+            free(val); */
+            
             // lock no mutex da bacia (um mutex pra cada bacia, de cada buffet)
             pthread_mutex_lock(&buffet[id_buffet].mutex_meals[self->_buffet_position]);
 
