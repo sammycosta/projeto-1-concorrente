@@ -20,9 +20,9 @@ void *chef_run()
     // int number_of_buffets = globals_get_number_of_buffets();
     // Vai embora quando todos estudantes se serviram
     // dados_buffet = (struct dados_buffet *)(malloc(sizeof(struct dados_buffet)));
+
     while (TRUE)
     {
-        // printf("alo, %d, \n", number_of_buffets);
 
         msleep(5000);      /* Pode retirar este sleep quando implementar a solução! */
         chef_check_food(); /* Checa bacias de todos buffets */
@@ -31,7 +31,16 @@ void *chef_run()
             /* Bacia recebeu número de bacia vazia */
             chef_put_food();
         }
+
+        /* Garanto fim de execução. Mas está olhando a fila externa, não interna; */
+        int all_students_entered;
+        int number_students = globals_get_students();
+        all_students_entered = number_students > 0 ? FALSE : TRUE;
+
+        if (all_students_entered == TRUE)
+            break;
     }
+    printf("chef saiu\n");
     // free(dados_buffet);
     pthread_exit(NULL);
 }

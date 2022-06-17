@@ -96,14 +96,14 @@ void student_serve(student_t *self)
 void student_leave(student_t *self, table_t *table)
 {
     /* Insira sua lógica aqui */
-    msleep(10000); // tempo de comer
+    msleep(5000); // tempo de comer
     pthread_mutex_t *pegar_cadeira = globals_get_mutex_seats();
     pthread_mutex_lock(&pegar_cadeira[self->_id_buffet]);
     table[self->_id_buffet]._empty_seats++; // libera a cadeira
     pthread_mutex_unlock(&pegar_cadeira[self->_id_buffet]);
 
     pthread_mutex_destroy(&self->mutex);
-    printf("!! Estudante %d foi embora", self->_id);
+    printf("!! Estudante %d foi embora\n", self->_id);
 }
 
 /* --------------------------------------------------------- */
