@@ -17,8 +17,7 @@ struct dados_buffet dados_buffet = {-1, -1};
 
 void *chef_run()
 {
-    int number_of_buffets = globals_get_number_of_buffets();
-    printf("alo, %d, \n", number_of_buffets);
+    // int number_of_buffets = globals_get_number_of_buffets();
     // Vai embora quando todos estudantes se serviram
     // dados_buffet = (struct dados_buffet *)(malloc(sizeof(struct dados_buffet)));
     while (TRUE)
@@ -42,7 +41,8 @@ void chef_put_food()
 {
     buffet_t *buffets = globals_get_buffets();
     buffets[dados_buffet.buffet_vazio]._meal[dados_buffet.bacia] = 40; // acho que não precisa mutex!
-    for (int i = 0; i < 40; i ++) {
+    for (int i = 0; i < 40; i++)
+    {
         sem_post(&buffets[dados_buffet.buffet_vazio].sem_meals[dados_buffet.bacia]);
     }
 }

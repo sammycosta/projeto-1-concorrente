@@ -39,7 +39,7 @@ void *student_run(void *arg)
 void student_seat(student_t *self, table_t *table)
 {
     /* Insira sua lógica aqui */
-    printf("estudante %d ENTROU NA FUNÇÃO DE SENTAR", self->_id);
+    printf("estudante %d ENTROU NA FUNÇÃO DE SENTAR\n", self->_id);
     int i = 0;
     int number_of_tables = globals_get_number_of_tables();
     pthread_mutex_t *pegar_cadeira = globals_get_mutex_seats();
@@ -51,7 +51,7 @@ void student_seat(student_t *self, table_t *table)
             table[i]._empty_seats--;
             pthread_mutex_unlock(&pegar_cadeira[i]);
             self->_id_buffet = table[i]._id; // salvando a mesa onde antes estava o buffet
-            printf("\nestudante %d sentou", self->_id);
+            printf("\n !! estudante %d sentou\n", self->_id);
             return; //(não tem variável pra mesa)
         }
         else
@@ -89,27 +89,8 @@ void student_serve(student_t *self)
         }
         msleep(10000); // tempo de se servir
         buffet_next_step(buffet, self);
-
-        /* ALGORITMO DE SPINLOCK/BUSYSWAIT ENQUANTO OUTRA LÓGICA MELHOR É FEITA */
-        /*int position = self->_buffet_position;
-        if (position == 4)
-        {
-            break;
-        }
-        if (self->left_or_right == 'L')
-        {
-            while (buffet[id_buffet].queue_left[position + 1] != 0)
-                ;
-            buffet_next_step(&buffet[id_buffet], self); // precisa garantir que não tem ninguém na frente?
-        }
-        else
-        {
-            while (buffet[id_buffet].queue_right[position + 1] != 0)
-                ;
-            buffet_next_step(&buffet[id_buffet], self);
-        }*/
     }
-    printf("estudante %d SAIU DO WHILE DE SERVE\n", self->_id);
+    printf("~ estudante %d SAIU DO WHILE DE SERVE\n", self->_id);
 }
 
 void student_leave(student_t *self, table_t *table)
@@ -122,7 +103,7 @@ void student_leave(student_t *self, table_t *table)
     pthread_mutex_unlock(&pegar_cadeira[self->_id_buffet]);
 
     pthread_mutex_destroy(&self->mutex);
-    printf("estudante %d foi embora", self->_id);
+    printf("!! Estudante %d foi embora", self->_id);
 }
 
 /* --------------------------------------------------------- */

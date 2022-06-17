@@ -64,7 +64,6 @@ void *worker_gate_run(void *arg)
     int all_students_entered;
     int number_students;
     char fila_livre = 'A';
-    printf("ENTREI NO WORKER GATE RUN \n");
     number_students = *((int *)arg);
     all_students_entered = number_students > 0 ? FALSE : TRUE;
 
@@ -76,9 +75,7 @@ void *worker_gate_run(void *arg)
         {
             // Look_buffet setou alguém para entrar na fila do buffet. Devo esperar essa pessoa terminar de entrar (unlockado na buffet_queue_insert);
             pthread_mutex_t *sai_fila = globals_get_mutex_gate();
-            printf("esperando unlock do sai fila\n ");
             pthread_mutex_lock(sai_fila);
-            printf("passei aqui: último estudante foi inserido\n");
         }
 
         // msleep(5000); /* Pode retirar este sleep quando implementar a solução! */
@@ -91,8 +88,6 @@ void worker_gate_init(worker_gate_t *self)
 {
 
     init_mutexes();
-
-    printf("entra aqui: worker gate init criou mutexes \n");
 
     int number_students = globals_get_students();
     pthread_create(&self->thread, NULL, worker_gate_run, &number_students);
@@ -107,7 +102,7 @@ void worker_gate_finalize(worker_gate_t *self)
 void worker_gate_insert_queue_buffet(student_t *student)
 {
     // garantidamente só chamada após look_queue permitir
-    printf("entra aqui: %d, no buffet %d na fila %d\n", student->_id, student->_id_buffet, student->left_or_right);
+    printf("entra aqui: %d, no buffet %d na fila %c\n", student->_id, student->_id_buffet, student->left_or_right);
     buffet_t *buffets = globals_get_buffets();
     buffet_queue_insert(buffets, student);
 }

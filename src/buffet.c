@@ -76,7 +76,6 @@ int buffet_queue_insert(buffet_t *self, student_t *student)
             pthread_mutex_unlock(&student->mutex);                  // libero student_serve
             pthread_mutex_t *mutex_gate = globals_get_mutex_gate(); // pego end do sai_fila
             pthread_mutex_unlock(mutex_gate);
-            printf("unlockei o sai fila\n");
             return TRUE;
         }
         printf("falhou entrar \n");
@@ -92,7 +91,6 @@ int buffet_queue_insert(buffet_t *self, student_t *student)
             pthread_mutex_unlock(&student->mutex);                  // libero student_serve
             pthread_mutex_t *mutex_gate = globals_get_mutex_gate(); // pego end do sai_fila
             pthread_mutex_unlock(mutex_gate);
-            printf("unlockei o sai fila\n");
 
             return TRUE;
         }
@@ -109,13 +107,12 @@ void buffet_next_step(buffet_t *self, student_t *student)
         if (student->left_or_right == 'L')
         { /* Caminha para a posição seguinte da fila do buffet.*/
             sem_wait(&(self->controle_fila_esq[student->_buffet_position]));
-            printf("semaforo bonitinho\n");
             int position = student->_buffet_position;
             self[student->_id_buffet].queue_left[position] = 0;
             self[student->_id_buffet].queue_left[position + 1] = student->_id;
             student->_buffet_position = student->_buffet_position + 1;
 
-            printf("estudante %d andou na fila\n", student->_id);
+            printf("-> dentro do semaforo: estudante %d andou na fila\n", student->_id);
             sem_post(&(self->controle_fila_esq[student->_buffet_position - 1]));
         }
         else /* Está na fila direita? */
@@ -125,7 +122,7 @@ void buffet_next_step(buffet_t *self, student_t *student)
             self[student->_id_buffet].queue_right[position] = 0;
             self[student->_id_buffet].queue_right[position + 1] = student->_id;
             student->_buffet_position = student->_buffet_position + 1;
-            printf("estudante %d andou na fila", student->_id);
+            printf("-> dentro do semaforo: estudante %d andou na fila\n", student->_id);
             sem_post(&(self->controle_fila_dir[student->_buffet_position - 1]));
         }
     }
