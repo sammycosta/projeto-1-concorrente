@@ -30,6 +30,15 @@ void *student_run(void *arg)
 
     pthread_mutex_lock(&self->mutex); // só se serve após inserção no buffet terminar
     student_serve(self);
+
+    // terminou de servir:: mutex
+    pthread_mutex_t *mutex_served = globals_get_mutex_served();
+
+    pthread_mutex_lock(mutex_served);
+    int students_served = globals_get_students_served() + 1;
+    globals_set_students_served(students_served);
+    pthread_mutex_unlock(mutex_served);
+
     student_seat(self, tables);
     student_leave(self, tables);
 
@@ -82,7 +91,7 @@ void student_serve(student_t *self)
             sem_getvalue(&buffet[id_buffet].sem_meals[self->_buffet_position], val);
             printf("\nsem buffet %d, %d: %d\n", id_buffet, self->_buffet_position, *val);
             free(val); */
-            
+
             // lock no mutex da bacia (um mutex pra cada bacia, de cada buffet)
             pthread_mutex_lock(&buffet[id_buffet].mutex_meals[self->_buffet_position]);
 
