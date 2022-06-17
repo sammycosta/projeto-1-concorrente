@@ -109,5 +109,5 @@ void worker_gate_insert_queue_buffet(student_t *student)
     // garantidamente só chamada após look_queue permitir
     printf("entra aqui: %d, no buffet %d na fila %d\n", student->_id, student->_id_buffet, student->left_or_right);
     buffet_t *buffets = globals_get_buffets();
-    buffet_queue_insert(&buffets[student->_id_buffet], student);
+    buffet_queue_insert(buffets, student);
 }

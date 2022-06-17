@@ -88,7 +88,7 @@ void student_serve(student_t *self)
             // talvez ter outro lock pra caso esteja vazio, pra que tente de novo depois?
         }
         msleep(10000); // tempo de se servir
-        buffet_next_step(&buffet[id_buffet], self);
+        buffet_next_step(buffet, self);
 
         /* ALGORITMO DE SPINLOCK/BUSYSWAIT ENQUANTO OUTRA LÓGICA MELHOR É FEITA */
         /*int position = self->_buffet_position;
