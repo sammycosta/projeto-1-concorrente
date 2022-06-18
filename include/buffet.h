@@ -16,8 +16,8 @@ typedef struct buffet
 
     pthread_mutex_t mutex_meals[5]; // Número fixo, então var estática?
     sem_t sem_meals[5];
-    sem_t controle_fila_esq[4];
-    sem_t controle_fila_dir[4];
+    sem_t controle_fila_esq[5];
+    sem_t controle_fila_dir[5];
 
     pthread_t thread; /* Thread do buffet   */
 } buffet_t;
