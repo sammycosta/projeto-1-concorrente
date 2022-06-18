@@ -87,7 +87,7 @@ int globals_get_seats_per_table()
     return seats_per_table;
 }
 
-void init_mutexes() // inicia mutexes necessários
+void init_mutexes()
 {
     /* mutex sai fila do worker gate: inicia trancado */
     pthread_mutex_init(&sai_fila, NULL);

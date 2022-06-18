@@ -16,9 +16,7 @@ void *buffet_run(void *arg)
         /* Máximo de porções por bacia (40 unidades). */
         _log_buffet(self);
 
-        // mesma coisa que o worker gate faz. Talvez alterar  all_students_entered para global
-        // int number_students = globals_get_queue()->_length;
-
+        /* Checa se todos estudantes da fila externa já entraram no buffet */
         int number_students = globals_get_students();
         all_students_entered = number_students > 0 ? FALSE : TRUE;
 
@@ -42,16 +40,13 @@ void buffet_init(buffet_t *self, int number_of_buffets)
         for (j = 0; j < 5; j++)
         {
             self[i]._meal[j] = 40;
-            pthread_mutex_init(&self[i].mutex_meals[j], NULL);
-            sem_init(&(self[i].sem_meals[j]), 0, 40);
+            pthread_mutex_init(&self[i].mutex_meals[j], NULL); // Inicia mutex de acesso a meals
+            sem_init(&(self[i].sem_meals[j]), 0, 40);          // Inicia semáforo de meals
+
+            /* Iniciam controles de next_step das filas */
             sem_init(&self[i].controle_fila_dir[j], 0, 1);
             sem_init(&self[i].controle_fila_esq[j], 0, 1);
         }
-        /*for (a = 0; a < 4; a++)
-        {
-            sem_init(&self[i].controle_fila_dir[a], 0, 1);
-            sem_init(&self[i].controle_fila_esq[a], 0, 1);
-        }*/
 
         for (j = 0; j < 5; j++)
         {
@@ -70,33 +65,36 @@ int buffet_queue_insert(buffet_t *self, student_t *student)
     /* Se o estudante vai para a fila esquerda */
     if (student->left_or_right == 'L')
     {
-        /* Verifica se a primeira posição está vaga */ 
-        //if (!self[student->_id_buffet].queue_left[0])
+        /* Verifica se a primeira posição está vaga */
+        // if (!self[student->_id_buffet].queue_left[0])
         //{
-            sem_wait(&self[student->_id_buffet].controle_fila_esq[0]);
-            self[student->_id_buffet].queue_left[0] = student->_id;
-            student->_buffet_position = 0;
-            pthread_mutex_unlock(&student->mutex);                  // libero student_serve
-            pthread_mutex_t *mutex_gate = globals_get_mutex_gate(); // pego end do sai_fila
-            pthread_mutex_unlock(mutex_gate);
-            return TRUE;
+        sem_wait(&self[student->_id_buffet].controle_fila_esq[0]);
+        self[student->_id_buffet].queue_left[0] = student->_id;
+        student->_buffet_position = 0;
+
+        /* unlock mutexes */
+        pthread_mutex_unlock(&student->mutex); // libero estudante se servir
+        pthread_mutex_t *mutex_gate = globals_get_mutex_gate();
+        pthread_mutex_unlock(mutex_gate); // Estudante inserido. Próximo estudante pode tentar entrar
+        return TRUE;
         //}
-        printf("falhou entrar \n");
         return FALSE;
     }
     else
     { /* Se o estudante vai para a fila direita */
-        //if (!self[student->_id_buffet].queue_right[0])
+        // if (!self[student->_id_buffet].queue_right[0])
         //{
-            /* Verifica se a primeira posição está vaga */
-            sem_wait(&self[student->_id_buffet].controle_fila_dir[0]);
-            self[student->_id_buffet].queue_right[0] = student->_id;
-            student->_buffet_position = 0;
-            pthread_mutex_unlock(&student->mutex);                  // libero student_serve
-            pthread_mutex_t *mutex_gate = globals_get_mutex_gate(); // pego end do sai_fila
-            pthread_mutex_unlock(mutex_gate);
+        /* Verifica se a primeira posição está vaga */
+        sem_wait(&self[student->_id_buffet].controle_fila_dir[0]);
+        self[student->_id_buffet].queue_right[0] = student->_id;
+        student->_buffet_position = 0;
 
-            return TRUE;
+        /* unlock mutexes */
+        pthread_mutex_unlock(&student->mutex);                  // libero estudante se servir
+        pthread_mutex_t *mutex_gate = globals_get_mutex_gate(); // pego end do sai_fila
+        pthread_mutex_unlock(mutex_gate);
+
+        return TRUE;
         //}
         printf("falhou entrar \n");
         return FALSE;
@@ -113,11 +111,11 @@ void buffet_next_step(buffet_t *self, student_t *student)
             int position = student->_buffet_position;
 
             sem_wait(&(self[student->_id_buffet].controle_fila_esq[position + 1]));
+
             self[student->_id_buffet].queue_left[position] = 0;
             self[student->_id_buffet].queue_left[position + 1] = student->_id;
             student->_buffet_position = student->_buffet_position + 1;
 
-            printf("-> dentro do semaforo: estudante %d andou na fila\n", student->_id);
             sem_post(&(self[student->_id_buffet].controle_fila_esq[position]));
         }
         else /* Está na fila direita? */
@@ -125,17 +123,17 @@ void buffet_next_step(buffet_t *self, student_t *student)
             int position = student->_buffet_position;
 
             sem_wait(&(self[student->_id_buffet].controle_fila_dir[position + 1]));
+
             self[student->_id_buffet].queue_right[position] = 0;
             self[student->_id_buffet].queue_right[position + 1] = student->_id;
             student->_buffet_position = student->_buffet_position + 1;
 
-            printf("-> dentro do semaforo: estudante %d andou na fila\n", student->_id);
             sem_post(&(self[student->_id_buffet].controle_fila_dir[position]));
         }
     }
     else
     {
-        // lembrar que tenho que zerar a pos quando ele vai ir embora tmb?
+        /* Próxima posição == 5 (SAINDO DO BUFFET): deixo a última posição livre; */
         if (student->left_or_right == 'L')
         {
             self[student->_id_buffet].queue_left[4] = 0;
@@ -146,7 +144,9 @@ void buffet_next_step(buffet_t *self, student_t *student)
             self[student->_id_buffet].queue_right[4] = 0;
             sem_post(&(self[student->_id_buffet].controle_fila_dir[student->_buffet_position]));
         }
-        student->_buffet_position = student->_buffet_position + 1; // assim ele sai?
+
+        /* Incremento a posição do estudante para ele notar que está fora do buffet e parar de rodar next_step na student_serve */
+        student->_buffet_position = student->_buffet_position + 1;
     }
 }
 

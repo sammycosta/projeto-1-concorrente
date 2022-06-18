@@ -1,6 +1,7 @@
 make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/home/samantha/Downloads/projeto-1-concorrente'
 make -C /home/samantha/Downloads/projeto-1-concorrente/src all
+ 
 make[1]: Entering directory '/home/samantha/Downloads/projeto-1-concorrente/src'
 echo [CC] queue.o
 cc -Wall -Werror -std=c11 -pthread -D_POSIX_C_SOURCE=200809L  -fsanitize=address -fsanitize=undefined -I /home/samantha/Downloads/projeto-1-concorrente/include  -D NDEBUG queue.c -c -o queue.o

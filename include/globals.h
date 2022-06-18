@@ -107,7 +107,7 @@ extern void globals_set_seats_per_table(int number);
 extern int globals_get_seats_per_table();
 
 /**
- * @brief Inicializa os mutexes por mesa (de modo global)
+ * @brief Inicializa os mutexes necessários (de modo global)
  *
  */
 extern void init_mutexes();
@@ -126,14 +126,31 @@ extern void globals_set_mutex_seats(pthread_mutex_t *number);
 
 extern pthread_mutex_t *globals_get_mutex_seats();
 
-// mutex da catraca do worker gate (comentar melhor a partir daqui)
+/**
+ * @brief Retorna o endereço do mutex da catraca
+ *
+ * @return pthread_mutex_t*
+ */
 extern pthread_mutex_t *globals_get_mutex_gate();
 
-// funções globais de students served
+/**
+ * @brief Retorna o número de estudantes que já se serviram no buffet
+ *
+ * @return int
+ */
 extern int globals_get_students_served();
+
+/**
+ * @brief Insere o número de estudantes que já se serviram no buffet
+ *
+ */
 extern void globals_set_students_served(int number);
 
-// mutex que protege incremento
+/**
+ * @brief Retorna o endereço do mutex que protege incremento de students_served
+ *
+ * @return pthread_mutex_t*
+ */
 extern pthread_mutex_t *globals_get_mutex_served();
 
 #endif

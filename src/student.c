@@ -16,29 +16,31 @@ void *student_run(void *arg)
     student_t *self = (student_t *)arg;
     table_t *tables = globals_get_table();
 
-    /* Inicio um mutex trancado -> talvez usar semáforo para isso. */
+    /* Inicia mutex pessoal do estudante */
     pthread_mutex_init(&self->mutex, NULL);
     pthread_mutex_lock(&self->mutex);
 
-    /* inserindo pq nao achei local que fizesse isso */
+    /* Estudante entra na fila única externa  */
     // talvez seja necessário proteger a inserção com um mutex.
     queue_t *fila_de_fora = globals_get_queue();
     queue_insert(fila_de_fora, self);
 
-    pthread_mutex_lock(&self->mutex);      // protejo a entrada dele no buffet
-    worker_gate_insert_queue_buffet(self); // só passa quando recebe o unlock
+    /* Estudante espera ser removido da fila externa para ser inserido no buffet */
+    pthread_mutex_lock(&self->mutex);
+    worker_gate_insert_queue_buffet(self);
 
-    pthread_mutex_lock(&self->mutex); // só se serve após inserção no buffet terminar
+    /* Estudante espera ser inserido adequadamente no buffet antes de começar a se servir */
+    pthread_mutex_lock(&self->mutex);
     student_serve(self);
 
-    // terminou de servir:: mutex
+    /* Estudante terminou de se servir. Altero o contador global protegido por mutex */
     pthread_mutex_t *mutex_served = globals_get_mutex_served();
-
     pthread_mutex_lock(mutex_served);
     int students_served = globals_get_students_served() + 1;
     globals_set_students_served(students_served);
     pthread_mutex_unlock(mutex_served);
 
+    /* Estudante livre para se sentar, comer e ir embora */
     student_seat(self, tables);
     student_leave(self, tables);
 
@@ -47,7 +49,6 @@ void *student_run(void *arg)
 
 void student_seat(student_t *self, table_t *table)
 {
-    /* Insira sua lógica aqui */
     printf("estudante %d ENTROU NA FUNÇÃO DE SENTAR\n", self->_id);
     int i = 0;
     int number_of_tables = globals_get_number_of_tables();
@@ -73,7 +74,6 @@ void student_seat(student_t *self, table_t *table)
 
 void student_serve(student_t *self)
 {
-    /* Insira sua lógica aqui */
     buffet_t *buffet = globals_get_buffets();
     int id_buffet = self->_id_buffet;
 
@@ -109,13 +109,15 @@ void student_serve(student_t *self)
 
 void student_leave(student_t *self, table_t *table)
 {
-    /* Insira sua lógica aqui */
     msleep(5000); // tempo de comer
+
+    /* Libera a cadeira em que estava sentado */
     pthread_mutex_t *pegar_cadeira = globals_get_mutex_seats();
     pthread_mutex_lock(&pegar_cadeira[self->_id_buffet]);
-    table[self->_id_buffet]._empty_seats++; // libera a cadeira
+    table[self->_id_buffet]._empty_seats++;
     pthread_mutex_unlock(&pegar_cadeira[self->_id_buffet]);
 
+    /* Destrói o mutex pessoal */
     pthread_mutex_destroy(&self->mutex);
     printf("!! Estudante %d foi embora\n", self->_id);
 }

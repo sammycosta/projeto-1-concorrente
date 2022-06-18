@@ -7,7 +7,7 @@ make -C /home/samantha/Downloads/projeto-1-concorrente/src all
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Jun 16 19:07:55 2022
+# Make data base, printed on Sat Jun 18 00:02:45 2022
 
 # Variables
 
@@ -56,7 +56,7 @@ _ = /usr/share/code/code
 # makefile (from '/home/samantha/Downloads/projeto-1-concorrente/build/makefile.config', line 49)
 CFLAGS = -Wall -Werror -std=c11 -pthread -D_POSIX_C_SOURCE=200809L  -fsanitize=address -fsanitize=undefined -I $(INCDIR) $(ADDONS) -D NDEBUG
 # environment
-JOURNAL_STREAM = 8:49545
+JOURNAL_STREAM = 8:51375
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile (from '/home/samantha/Downloads/projeto-1-concorrente/build/makefile.executable', line 1)
@@ -78,7 +78,7 @@ VSCODE_VERBOSE_LOGGING = true
 # environment
 BUILDDIR = /home/samantha/Downloads/projeto-1-concorrente/build
 # environment
-MANAGERPID = 2713
+MANAGERPID = 2707
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -92,7 +92,7 @@ PATH = /home/samantha/.local/bin:/home/samantha/bin:/home/samantha/.nvm/versions
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/samantha-aspire:@/tmp/.ICE-unix/2941,unix/samantha-aspire:/tmp/.ICE-unix/2941
+SESSION_MANAGER = local/samantha-aspire:@/tmp/.ICE-unix/2937,unix/samantha-aspire:/tmp/.ICE-unix/2937
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -104,7 +104,7 @@ VSCODE_LOG_STACK = false
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 37aa699d3a27470b86688481ec8724a8
+INVOCATION_ID = dd876bbc21ca49b88fe45aafa4952826
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -114,7 +114,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 23978
+GIO_LAUNCHED_DESKTOP_FILE_PID = 21508
 # automatic
 %F = $(notdir $%)
 # environment
@@ -126,7 +126,7 @@ PWD = /home/samantha/Downloads/projeto-1-concorrente
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 2901
+SSH_AGENT_PID = 2898
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -168,7 +168,7 @@ BINDIR = /home/samantha/Downloads/projeto-1-concorrente/bin
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-13c29f37-b54a-4f49-8295-718afafdca8a.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-5c583f16-ea3e-4b61-881f-85a2af313661.sock
 # environment
 EXEC = program
 # default
@@ -242,7 +242,7 @@ GIO_LAUNCHED_DESKTOP_FILE = /usr/share/applications/code.desktop
 # environment
 LANG = C
 # environment
-VSCODE_PID = 23978
+VSCODE_PID = 21508
 # variable set hash-table stats:
 # Load=116/1024=11%, Rehash=0, Collisions=18/187=10%
 
@@ -278,14 +278,14 @@ VSCODE_PID = 23978
 # Not a target:
 worker_gate.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-13 23:13:59.917487644
+#  Last modified 2022-06-16 21:29:23.740486734
 #  File has been updated.
 #  Successfully updated.
 
 table.o: table.c /home/samantha/Downloads/projeto-1-concorrente/include/student.h /home/samantha/Downloads/projeto-1-concorrente/include/buffet.h /home/samantha/Downloads/projeto-1-concorrente/include/worker_gate.h /home/samantha/Downloads/projeto-1-concorrente/include/queue.h /home/samantha/Downloads/projeto-1-concorrente/include/table.h /home/samantha/Downloads/projeto-1-concorrente/include/config.h /home/samantha/Downloads/projeto-1-concorrente/include/globals.h /home/samantha/Downloads/projeto-1-concorrente/include/chef.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'table'
-#  Last modified 2022-06-13 19:18:58.80750501
+#  Last modified 2022-06-17 23:53:53.393482299
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from '/home/samantha/Downloads/projeto-1-concorrente/build/makefile.executable', line 55):
@@ -295,7 +295,7 @@ table.o: table.c /home/samantha/Downloads/projeto-1-concorrente/include/student.
 # Not a target:
 /home/samantha/Downloads/projeto-1-concorrente/include/globals.h:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-13 16:52:24.502087821
+#  Last modified 2022-06-17 20:26:22.922402035
 #  File has been updated.
 #  Successfully updated.
 
@@ -331,7 +331,7 @@ all: queue.o buffet.o worker_gate.o config.o table.o student.o main.o globals.o 
 queue.o: queue.c /home/samantha/Downloads/projeto-1-concorrente/include/student.h /home/samantha/Downloads/projeto-1-concorrente/include/buffet.h /home/samantha/Downloads/projeto-1-concorrente/include/worker_gate.h /home/samantha/Downloads/projeto-1-concorrente/include/queue.h /home/samantha/Downloads/projeto-1-concorrente/include/table.h /home/samantha/Downloads/projeto-1-concorrente/include/config.h /home/samantha/Downloads/projeto-1-concorrente/include/globals.h /home/samantha/Downloads/projeto-1-concorrente/include/chef.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'queue'
-#  Last modified 2022-06-13 19:17:46.622129561
+#  Last modified 2022-06-17 23:53:53.389482298
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from '/home/samantha/Downloads/projeto-1-concorrente/build/makefile.executable', line 55):
@@ -348,6 +348,7 @@ queue.o: queue.c /home/samantha/Downloads/projeto-1-concorrente/include/student.
 # Not a target:
 main.c:
 #  Implicit rule search has been done.
+ 
 #  Last modified 2022-06-13 16:36:17.925354626
 #  File has been updated.
 #  Successfully updated.
@@ -355,7 +356,7 @@ main.c:
 student.o: student.c /home/samantha/Downloads/projeto-1-concorrente/include/student.h /home/samantha/Downloads/projeto-1-concorrente/include/buffet.h /home/samantha/Downloads/projeto-1-concorrente/include/worker_gate.h /home/samantha/Downloads/projeto-1-concorrente/include/queue.h /home/samantha/Downloads/projeto-1-concorrente/include/table.h /home/samantha/Downloads/projeto-1-concorrente/include/config.h /home/samantha/Downloads/projeto-1-concorrente/include/globals.h /home/samantha/Downloads/projeto-1-concorrente/include/chef.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'student'
-#  Last modified 2022-06-13 23:51:15.498619492
+#  Last modified 2022-06-17 23:53:53.389482298
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from '/home/samantha/Downloads/projeto-1-concorrente/build/makefile.executable', line 55):
@@ -364,7 +365,6 @@ student.o: student.c /home/samantha/Downloads/projeto-1-concorrente/include/stud
 
 distclean: clean
 #  Implicit rule search has not been done.
- 
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from '/home/samantha/Downloads/projeto-1-concorrente/build/makefile.executable', line 46):
@@ -374,7 +374,7 @@ distclean: clean
 # Not a target:
 /home/samantha/Downloads/projeto-1-concorrente/include/student.h:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-13 16:36:17.92135409
+#  Last modified 2022-06-16 19:20:45.69660049
 #  File has been updated.
 #  Successfully updated.
 
@@ -401,7 +401,7 @@ Makefile:
 chef.o: chef.c /home/samantha/Downloads/projeto-1-concorrente/include/student.h /home/samantha/Downloads/projeto-1-concorrente/include/buffet.h /home/samantha/Downloads/projeto-1-concorrente/include/worker_gate.h /home/samantha/Downloads/projeto-1-concorrente/include/queue.h /home/samantha/Downloads/projeto-1-concorrente/include/table.h /home/samantha/Downloads/projeto-1-concorrente/include/config.h /home/samantha/Downloads/projeto-1-concorrente/include/globals.h /home/samantha/Downloads/projeto-1-concorrente/include/chef.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'chef'
-#  Last modified 2022-06-13 19:18:58.967508024
+#  Last modified 2022-06-17 23:53:53.389482298
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from '/home/samantha/Downloads/projeto-1-concorrente/build/makefile.executable', line 55):
@@ -425,7 +425,7 @@ table.c:
 # Not a target:
 /home/samantha/Downloads/projeto-1-concorrente/include/buffet.h:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-13 19:11:40.062505353
+#  Last modified 2022-06-17 23:53:53.389482298
 #  File has been updated.
 #  Successfully updated.
 
@@ -446,7 +446,7 @@ queue.c:
 worker_gate.o: worker_gate.c /home/samantha/Downloads/projeto-1-concorrente/include/student.h /home/samantha/Downloads/projeto-1-concorrente/include/buffet.h /home/samantha/Downloads/projeto-1-concorrente/include/worker_gate.h /home/samantha/Downloads/projeto-1-concorrente/include/queue.h /home/samantha/Downloads/projeto-1-concorrente/include/table.h /home/samantha/Downloads/projeto-1-concorrente/include/config.h /home/samantha/Downloads/projeto-1-concorrente/include/globals.h /home/samantha/Downloads/projeto-1-concorrente/include/chef.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'worker_gate'
-#  Last modified 2022-06-13 23:14:11.429384317
+#  Last modified 2022-06-17 23:53:53.393482299
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from '/home/samantha/Downloads/projeto-1-concorrente/build/makefile.executable', line 55):
@@ -456,14 +456,14 @@ worker_gate.o: worker_gate.c /home/samantha/Downloads/projeto-1-concorrente/incl
 # Not a target:
 student.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-13 23:51:15.494619519
+#  Last modified 2022-06-17 20:40:12.056390022
 #  File has been updated.
 #  Successfully updated.
 
 globals.o: globals.c /home/samantha/Downloads/projeto-1-concorrente/include/student.h /home/samantha/Downloads/projeto-1-concorrente/include/buffet.h /home/samantha/Downloads/projeto-1-concorrente/include/worker_gate.h /home/samantha/Downloads/projeto-1-concorrente/include/queue.h /home/samantha/Downloads/projeto-1-concorrente/include/table.h /home/samantha/Downloads/projeto-1-concorrente/include/config.h /home/samantha/Downloads/projeto-1-concorrente/include/globals.h /home/samantha/Downloads/projeto-1-concorrente/include/chef.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'globals'
-#  Last modified 2022-06-13 20:07:30.762865648
+#  Last modified 2022-06-17 23:53:53.389482298
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from '/home/samantha/Downloads/projeto-1-concorrente/build/makefile.executable', line 55):
@@ -486,7 +486,7 @@ globals.o: globals.c /home/samantha/Downloads/projeto-1-concorrente/include/stud
 buffet.o: buffet.c /home/samantha/Downloads/projeto-1-concorrente/include/student.h /home/samantha/Downloads/projeto-1-concorrente/include/buffet.h /home/samantha/Downloads/projeto-1-concorrente/include/worker_gate.h /home/samantha/Downloads/projeto-1-concorrente/include/queue.h /home/samantha/Downloads/projeto-1-concorrente/include/table.h /home/samantha/Downloads/projeto-1-concorrente/include/config.h /home/samantha/Downloads/projeto-1-concorrente/include/globals.h /home/samantha/Downloads/projeto-1-concorrente/include/chef.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'buffet'
-#  Last modified 2022-06-13 23:27:07.092511701
+#  Last modified 2022-06-17 23:53:53.389482298
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from '/home/samantha/Downloads/projeto-1-concorrente/build/makefile.executable', line 55):
@@ -504,14 +504,14 @@ clean:
 # Not a target:
 chef.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-13 18:19:43.846237119
+#  Last modified 2022-06-17 20:39:51.7937829
 #  File has been updated.
 #  Successfully updated.
 
 main.o: main.c /home/samantha/Downloads/projeto-1-concorrente/include/student.h /home/samantha/Downloads/projeto-1-concorrente/include/buffet.h /home/samantha/Downloads/projeto-1-concorrente/include/worker_gate.h /home/samantha/Downloads/projeto-1-concorrente/include/queue.h /home/samantha/Downloads/projeto-1-concorrente/include/table.h /home/samantha/Downloads/projeto-1-concorrente/include/config.h /home/samantha/Downloads/projeto-1-concorrente/include/globals.h /home/samantha/Downloads/projeto-1-concorrente/include/chef.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'main'
-#  Last modified 2022-06-13 19:18:58.907506893
+#  Last modified 2022-06-17 23:53:53.389482298
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from '/home/samantha/Downloads/projeto-1-concorrente/build/makefile.executable', line 55):
@@ -535,7 +535,7 @@ config.c:
 config.o: config.c /home/samantha/Downloads/projeto-1-concorrente/include/student.h /home/samantha/Downloads/projeto-1-concorrente/include/buffet.h /home/samantha/Downloads/projeto-1-concorrente/include/worker_gate.h /home/samantha/Downloads/projeto-1-concorrente/include/queue.h /home/samantha/Downloads/projeto-1-concorrente/include/table.h /home/samantha/Downloads/projeto-1-concorrente/include/config.h /home/samantha/Downloads/projeto-1-concorrente/include/globals.h /home/samantha/Downloads/projeto-1-concorrente/include/chef.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'config'
-#  Last modified 2022-06-13 19:18:58.779504481
+#  Last modified 2022-06-17 23:53:53.389482298
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from '/home/samantha/Downloads/projeto-1-concorrente/build/makefile.executable', line 55):
@@ -545,14 +545,14 @@ config.o: config.c /home/samantha/Downloads/projeto-1-concorrente/include/studen
 # Not a target:
 globals.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-13 20:07:27.798940122
+#  Last modified 2022-06-17 20:25:45.027069532
 #  File has been updated.
 #  Successfully updated.
 
 # Not a target:
 buffet.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-13 23:26:14.534484241
+#  Last modified 2022-06-17 23:53:53.389482298
 #  File has been updated.
 #  Successfully updated.
 
@@ -570,7 +570,7 @@ buffet.c:
 # strcache performance: lookups = 244 / hit rate = 75%
 # hash-table stats:
 # Load=59/8192=1%, Rehash=0, Collisions=2/244=1%
-# Finished Make data base on Thu Jun 16 19:07:55 2022
+# Finished Make data base on Sat Jun 18 00:02:45 2022
 
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
@@ -579,7 +579,7 @@ buffet.c:
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Jun 16 19:07:55 2022
+# Make data base, printed on Sat Jun 18 00:02:45 2022
 
 # Variables
 
@@ -624,7 +624,7 @@ VSCODE_NLS_CONFIG = {"locale":"pt-br","availableLanguages":{"*":"pt-br"},"_langu
 # environment
 _ = /usr/share/code/code
 # environment
-JOURNAL_STREAM = 8:49545
+JOURNAL_STREAM = 8:51375
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile (from 'Makefile', line 1)
@@ -643,10 +643,11 @@ XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/d
 DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 VSCODE_VERBOSE_LOGGING = true
+ 
 # makefile (from 'Makefile', line 49)
 BUILDDIR := /home/samantha/Downloads/projeto-1-concorrente/build
 # environment
-MANAGERPID = 2713
+MANAGERPID = 2707
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -660,7 +661,7 @@ PATH = /home/samantha/.local/bin:/home/samantha/bin:/home/samantha/.nvm/versions
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/samantha-aspire:@/tmp/.ICE-unix/2941,unix/samantha-aspire:/tmp/.ICE-unix/2941
+SESSION_MANAGER = local/samantha-aspire:@/tmp/.ICE-unix/2937,unix/samantha-aspire:/tmp/.ICE-unix/2937
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -668,12 +669,11 @@ NVM_BIN = /home/samantha/.nvm/versions/node/v17.4.0/bin
 # environment
 XDG_MENU_PREFIX = gnome-
 # environment
- 
 VSCODE_LOG_STACK = false
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 37aa699d3a27470b86688481ec8724a8
+INVOCATION_ID = dd876bbc21ca49b88fe45aafa4952826
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -683,7 +683,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 23978
+GIO_LAUNCHED_DESKTOP_FILE_PID = 21508
 # automatic
 %F = $(notdir $%)
 # environment
@@ -697,7 +697,7 @@ PWD = /home/samantha/Downloads/projeto-1-concorrente
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 2901
+SSH_AGENT_PID = 2898
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -739,7 +739,7 @@ BINDIR := /home/samantha/Downloads/projeto-1-concorrente/bin
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-13c29f37-b54a-4f49-8295-718afafdca8a.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-5c583f16-ea3e-4b61-881f-85a2af313661.sock
 # makefile (from 'Makefile', line 41)
 EXEC = program
 # default
@@ -807,7 +807,7 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-VSCODE_PID = 23978
+VSCODE_PID = 21508
 # variable set hash-table stats:
 # Load=112/1024=11%, Rehash=0, Collisions=17/150=11%
 
@@ -902,6 +902,6 @@ clean: distclean
 # strcache performance: lookups = 26 / hit rate = 38%
 # hash-table stats:
 # Load=16/8192=0%, Rehash=0, Collisions=1/26=4%
-# Finished Make data base on Thu Jun 16 19:07:55 2022
+# Finished Make data base on Sat Jun 18 00:02:45 2022
 
  

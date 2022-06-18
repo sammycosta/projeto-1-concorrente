@@ -33,7 +33,6 @@ void *chef_run()
 
         /* Garanto fim de execução. Baseado no número de estudantes que sairam da função de serve */
         int students_served = globals_get_students_served();
-
         if (students_served == number_students)
             break;
     }
