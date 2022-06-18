@@ -17,9 +17,8 @@ struct dados_buffet dados_buffet = {-1, -1};
 
 void *chef_run()
 {
-    // int number_of_buffets = globals_get_number_of_buffets();
     // Vai embora quando todos estudantes se serviram
-    // dados_buffet = (struct dados_buffet *)(malloc(sizeof(struct dados_buffet)));
+    int number_students = globals_get_students(); // TOTAL DE ESTUDANTES NO INICIO
 
     while (TRUE)
     {
@@ -32,15 +31,13 @@ void *chef_run()
             chef_put_food();
         }
 
-        /* Garanto fim de execução. Mas está olhando a fila externa, não interna; */
-        int all_students_entered;
-        int number_students = globals_get_students();
-        all_students_entered = number_students > 0 ? FALSE : TRUE;
+        /* Garanto fim de execução. Baseado no número de estudantes que sairam da função de serve */
+        int students_served = globals_get_students_served();
 
-        if (all_students_entered == TRUE)
+        if (students_served == number_students)
             break;
     }
-    printf("chef saiu\n");
+    printf("Chef saiu, students served == %d\n", globals_get_students_served());
     // free(dados_buffet);
     pthread_exit(NULL);
 }

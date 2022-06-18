@@ -8,12 +8,13 @@ table_t *table = NULL;
 buffet_t *buffets_ref = NULL;
 pthread_mutex_t *pegar_cadeira;
 pthread_mutex_t sai_fila;
+pthread_mutex_t mutex_served;
 
 int number_of_buffets = 0;
 int students_number = 0;
 int number_of_tables = 0;
 int seats_per_table = 0;
-
+int students_served = 0;
 // extern pthread_mutex_t *pegar_cadeira; // variavel global, melhor fazer função?
 
 void globals_set_queue(queue_t *queue)
@@ -86,11 +87,16 @@ int globals_get_seats_per_table()
     return seats_per_table;
 }
 
-void init_mutexes() // inicia o mutex das mesas
+void init_mutexes() // inicia mutexes necessários
 {
+    /* mutex sai fila do worker gate: inicia trancado */
     pthread_mutex_init(&sai_fila, NULL);
     pthread_mutex_lock(&sai_fila);
 
+    /* mutex que protege a contagem de estudantes saindo do buffet */
+    pthread_mutex_init(&mutex_served, NULL);
+
+    /* mutexes das mesas: revisar */
     pthread_mutex_t *pegar_cadeira = (pthread_mutex_t *)(malloc(sizeof(pthread_mutex_t) * number_of_tables));
     for (int i = 0; i < number_of_tables; i++)
     {
@@ -116,6 +122,21 @@ pthread_mutex_t *globals_get_mutex_gate()
     return &sai_fila;
 }
 
+int globals_get_students_served()
+{
+    return students_served;
+}
+
+void globals_set_students_served(int number)
+{
+    students_served = number;
+}
+
+pthread_mutex_t *globals_get_mutex_served()
+{
+    return &mutex_served;
+}
+
 /**
  * @brief Finaliza todas as variáveis globais que ainda não foram liberadas.
  *  Se criar alguma variável global que faça uso de mallocs, lembre-se sempre de usar o free dentro
@@ -127,6 +148,7 @@ void globals_finalize()
     /* Destruir mutexes aqui por enquanto */
 
     pthread_mutex_destroy(&sai_fila);
+    pthread_mutex_destroy(&mutex_served);
 
     for (int i = 0; i < number_of_buffets; i++)
     {

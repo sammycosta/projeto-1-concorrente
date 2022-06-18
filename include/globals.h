@@ -126,8 +126,14 @@ extern void globals_set_mutex_seats(pthread_mutex_t *number);
 
 extern pthread_mutex_t *globals_get_mutex_seats();
 
-// mutex
-
+// mutex da catraca do worker gate (comentar melhor a partir daqui)
 extern pthread_mutex_t *globals_get_mutex_gate();
+
+// funções globais de students served
+extern int globals_get_students_served();
+extern void globals_set_students_served(int number);
+
+// mutex que protege incremento
+extern pthread_mutex_t *globals_get_mutex_served();
 
 #endif
