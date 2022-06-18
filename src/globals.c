@@ -167,6 +167,14 @@ void globals_finalize()
         for (int j = 0; j < 5; j++)
         { // destruindo mutex por bacia
             pthread_mutex_destroy(&buffets_ref[i].mutex_meals[j]);
+
+            //destruindo semaforos por bacia
+            sem_destroy(&(buffets_ref[i].sem_meals[j]));
+
+            //destruindo controles do next_step
+            sem_destroy(&buffets_ref[i].controle_fila_dir[j]);
+            sem_destroy(&buffets_ref[i].controle_fila_esq[j]);
+           
         }
     }
 
