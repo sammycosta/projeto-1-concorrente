@@ -44,6 +44,13 @@ void *student_run(void *arg)
     student_seat(self, tables);
     student_leave(self, tables);
 
+    /* Estudante foi embora. Altero o contador global protegido por mutex */
+    pthread_mutex_t *mutex_gone = globals_get_mutex_gone();
+    pthread_mutex_lock(mutex_gone);
+    int students_gone = globals_get_students_gone() + 1;
+    globals_set_students_gone(students_gone);
+    pthread_mutex_unlock(mutex_gone);
+
     pthread_exit(NULL);
 };
 
@@ -101,7 +108,7 @@ void student_serve(student_t *self)
             //}
             // talvez ter outro lock pra caso esteja vazio, pra que tente de novo depois?
         }
-        msleep(10000); // tempo de se servir
+        msleep(5000); // tempo de se servir
         buffet_next_step(buffet, self);
     }
     printf("~ estudante %d SAIU DO WHILE DE SERVE\n", self->_id);

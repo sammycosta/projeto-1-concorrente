@@ -113,12 +113,6 @@ extern int globals_get_seats_per_table();
 extern void init_mutexes();
 
 /**
- * @brief Insere o array de mutexes pegar_cadeira (de modo global)
- *
- */
-extern void globals_set_mutex_seats(pthread_mutex_t *number);
-
-/**
  * @brief Retorna o array de mutexes pegar_cadeira (de modo global)
  *
  * @return pthread_mutex_t*
@@ -153,4 +147,23 @@ extern void globals_set_students_served(int number);
  */
 extern pthread_mutex_t *globals_get_mutex_served();
 
+/**
+ * @brief Retorna o número de estudantes que já sairam do RU
+ *
+ * @return int
+ */
+extern int globals_get_students_gone();
+
+/**
+ * @brief Insere o número de estudantes que já saíram do RU
+ *
+ */
+extern void globals_set_students_gone(int number);
+
+/**
+ * @brief Retorna o endereço do mutex que protege incremento de students_gone
+ *
+ * @return pthread_mutex_t*
+ */
+extern pthread_mutex_t *globals_get_mutex_gone();
 #endif

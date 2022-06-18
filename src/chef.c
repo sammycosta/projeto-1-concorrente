@@ -36,7 +36,6 @@ void *chef_run()
         if (students_served == number_students)
             break;
     }
-    printf("Chef saiu, students served == %d\n", globals_get_students_served());
     // free(dados_buffet);
     pthread_exit(NULL);
 }

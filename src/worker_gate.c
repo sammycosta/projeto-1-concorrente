@@ -83,6 +83,11 @@ void *worker_gate_run(void *arg)
         }
     }
 
+    /* Todos da fila externa saíram. Agora aguardo estudantes de dentro irem embora.
+    Necessário pois por algum motivo o programa finaliza antes dos estudantes saírem: join não executado corretamente? **Em funções que não podemos alterar */
+    while (number_students != globals_get_students_gone())
+        ;
+
     pthread_exit(NULL);
 }
 
@@ -97,6 +102,7 @@ void worker_gate_finalize(worker_gate_t *self)
 {
     pthread_join(self->thread, NULL);
     free(self);
+    globals_finalize(); /* Não vi isso sendo chamado em nenhum outro lugar */
 }
 
 void worker_gate_insert_queue_buffet(student_t *student)

@@ -6,15 +6,18 @@
 queue_t *students_queue = NULL;
 table_t *table = NULL;
 buffet_t *buffets_ref = NULL;
-pthread_mutex_t *pegar_cadeira;
+
+pthread_mutex_t *pegar_cadeira; // global
 pthread_mutex_t sai_fila;
 pthread_mutex_t mutex_served;
+pthread_mutex_t mutex_gone;
 
 int number_of_buffets = 0;
 int students_number = 0;
 int number_of_tables = 0;
 int seats_per_table = 0;
 int students_served = 0;
+int students_gone = 0;
 // extern pthread_mutex_t *pegar_cadeira; // variavel global, melhor fazer função?
 
 void globals_set_queue(queue_t *queue)
@@ -95,21 +98,14 @@ void init_mutexes()
 
     /* mutex que protege a contagem de estudantes saindo do buffet */
     pthread_mutex_init(&mutex_served, NULL);
+    pthread_mutex_init(&mutex_gone, NULL);
 
-    /* mutexes das mesas: revisar */
-    pthread_mutex_t *pegar_cadeira = (pthread_mutex_t *)(malloc(sizeof(pthread_mutex_t) * number_of_tables));
+    /* mutexes das mesas */
+    pegar_cadeira = (pthread_mutex_t *)(malloc(sizeof(pthread_mutex_t) * number_of_tables));
     for (int i = 0; i < number_of_tables; i++)
     {
         pthread_mutex_init(&(pegar_cadeira[i]), NULL);
     }
-
-    globals_set_mutex_seats(pegar_cadeira);
-}
-
-void globals_set_mutex_seats(pthread_mutex_t *array)
-{
-    // não sei se estou usando essa global, checar com calma dps
-    pegar_cadeira = array;
 }
 
 pthread_mutex_t *globals_get_mutex_seats()
@@ -137,6 +133,21 @@ pthread_mutex_t *globals_get_mutex_served()
     return &mutex_served;
 }
 
+int globals_get_students_gone()
+{
+    return students_gone;
+}
+
+void globals_set_students_gone(int number)
+{
+    students_gone = number;
+}
+
+pthread_mutex_t *globals_get_mutex_gone()
+{
+    return &mutex_gone;
+}
+
 /**
  * @brief Finaliza todas as variáveis globais que ainda não foram liberadas.
  *  Se criar alguma variável global que faça uso de mallocs, lembre-se sempre de usar o free dentro
@@ -148,6 +159,7 @@ void globals_finalize()
     /* Destruir mutexes aqui por enquanto */
 
     pthread_mutex_destroy(&sai_fila);
+    pthread_mutex_destroy(&mutex_served);
     pthread_mutex_destroy(&mutex_served);
 
     for (int i = 0; i < number_of_buffets; i++)
