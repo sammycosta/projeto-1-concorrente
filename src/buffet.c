@@ -20,7 +20,7 @@ void *buffet_run(void *arg)
         int number_students = globals_get_students();
         all_students_entered = number_students > 0 ? FALSE : TRUE;
 
-        msleep(5000); /* Pode retirar este sleep quando implementar a solução! */
+        msleep(1000); /* Para não printar os logs muitas vezes */
     }
 
     pthread_exit(NULL);
@@ -65,39 +65,28 @@ int buffet_queue_insert(buffet_t *self, student_t *student)
     /* Se o estudante vai para a fila esquerda */
     if (student->left_or_right == 'L')
     {
-        /* Verifica se a primeira posição está vaga */
-        // if (!self[student->_id_buffet].queue_left[0])
-        //{
-        sem_wait(&self[student->_id_buffet].controle_fila_esq[0]);
+        sem_wait(&self[student->_id_buffet].controle_fila_esq[0]); // Verifica se a primeira posição está vaga
         self[student->_id_buffet].queue_left[0] = student->_id;
         student->_buffet_position = 0;
 
-        /* unlock mutexes */
-        pthread_mutex_unlock(&student->mutex); // libero estudante se servir
+        pthread_mutex_unlock(&student->mutex); // Libero estudante se servir
         pthread_mutex_t *mutex_gate = globals_get_mutex_gate();
         pthread_mutex_unlock(mutex_gate); // Estudante inserido. Próximo estudante pode tentar entrar
+
         return TRUE;
-        //}
-        return FALSE;
     }
+    /* Se o estudante vai para a fila direita */
     else
-    { /* Se o estudante vai para a fila direita */
-        // if (!self[student->_id_buffet].queue_right[0])
-        //{
-        /* Verifica se a primeira posição está vaga */
-        sem_wait(&self[student->_id_buffet].controle_fila_dir[0]);
+    {
+        sem_wait(&self[student->_id_buffet].controle_fila_dir[0]); // Verifica se a primeira posição está vaga
         self[student->_id_buffet].queue_right[0] = student->_id;
         student->_buffet_position = 0;
 
-        /* unlock mutexes */
-        pthread_mutex_unlock(&student->mutex);                  // libero estudante se servir
-        pthread_mutex_t *mutex_gate = globals_get_mutex_gate(); // pego end do sai_fila
-        pthread_mutex_unlock(mutex_gate);
+        pthread_mutex_unlock(&student->mutex);
+        pthread_mutex_t *mutex_gate = globals_get_mutex_gate();
+        pthread_mutex_unlock(mutex_gate); // Estudante inserido. Próximo estudante pode tentar entrar
 
         return TRUE;
-        //}
-        printf("falhou entrar \n");
-        return FALSE;
     }
 }
 
@@ -110,18 +99,24 @@ void buffet_next_step(buffet_t *self, student_t *student)
         { /* Caminha para a posição seguinte da fila do buffet.*/
             int position = student->_buffet_position;
 
+            // Já tem posse do semáforo da posição atual (por causa da iteração anterior ou da inserção na fila)
+            // Wait no semáforo binário da posição seguinte
             sem_wait(&(self[student->_id_buffet].controle_fila_esq[position + 1]));
 
+            // Coloca o student na próxima posição e zera a atual
+            // Exclusão mútua garantida pois está em posse dos 2 semáforos binários das respectivas posições
             self[student->_id_buffet].queue_left[position] = 0;
             self[student->_id_buffet].queue_left[position + 1] = student->_id;
             student->_buffet_position = student->_buffet_position + 1;
 
+            // Libera o semáforo da posição antiga
             sem_post(&(self[student->_id_buffet].controle_fila_esq[position]));
         }
         else /* Está na fila direita? */
         {    /* Caminha para a posição seguinte da fila do buffet.*/
             int position = student->_buffet_position;
 
+            // Mesma lógica anterior, só que para a fila direita
             sem_wait(&(self[student->_id_buffet].controle_fila_dir[position + 1]));
 
             self[student->_id_buffet].queue_right[position] = 0;
@@ -133,15 +128,17 @@ void buffet_next_step(buffet_t *self, student_t *student)
     }
     else
     {
-        /* Próxima posição == 5 (SAINDO DO BUFFET): deixo a última posição livre; */
+        /* Na última posição do buffet */
         if (student->left_or_right == 'L')
         {
             self[student->_id_buffet].queue_left[4] = 0;
+            // Libera o semáforo da última posição do buffet (atual)
             sem_post(&(self[student->_id_buffet].controle_fila_esq[student->_buffet_position]));
         }
         else
         {
             self[student->_id_buffet].queue_right[4] = 0;
+            // Libera o semáforo da última posição do buffet (atual)
             sem_post(&(self[student->_id_buffet].controle_fila_dir[student->_buffet_position]));
         }
 

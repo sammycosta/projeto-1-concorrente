@@ -14,16 +14,15 @@ void worker_gate_look_queue(int *all_students_entered)
     *all_students_entered = number_students > 0 ? FALSE : TRUE;
 }
 
-/* Removo o primeiro estudante da fila. Modifico a primeiro_estudante_var */
+/* Remove o primeiro estudante da fila. Modifica a primeiro_estudante_var */
 void worker_gate_remove_student()
 {
     queue_t *fila = globals_get_queue();
     primeiro_estudante_var = queue_remove(fila);
 
-    /* Modifico a global de estudantes da fila externa */
-    int number_students = globals_get_students() - 1; // acho que não dá erro por ser um por vez
+    /* Modifica a global de estudantes da fila externa */
+    int number_students = globals_get_students() - 1;
     globals_set_students(number_students);
-    printf("%d estudantes até agora -> REMOVI O ESTUDANTE %d \n", globals_get_students(), primeiro_estudante_var->_id);
 }
 
 /* Caso tenham estudantes na fila externa, checa todos as filas de todos os buffets.
@@ -41,8 +40,7 @@ char worker_gate_look_buffet()
     for (int i = 0; i < number_of_buffets; i++)
     {
         if (!buffets[i].queue_left[0])
-        { // precisa mutex?
-
+        {
             worker_gate_remove_student(); // seta primeiro estudante var
             primeiro_estudante_var->_id_buffet = buffets[i]._id;
             primeiro_estudante_var->left_or_right = 'L';
@@ -93,7 +91,7 @@ void *worker_gate_run(void *arg)
 
 void worker_gate_init(worker_gate_t *self)
 {
-    init_mutexes();
+    init_mutexes(); // Chama a inicialização dos mutexes globais
     int number_students = globals_get_students();
     pthread_create(&self->thread, NULL, worker_gate_run, &number_students);
 }
@@ -102,7 +100,7 @@ void worker_gate_finalize(worker_gate_t *self)
 {
     pthread_join(self->thread, NULL);
     free(self);
-    globals_finalize(); /* Não vi isso sendo chamado em nenhum outro lugar */
+    globals_finalize();
 }
 
 void worker_gate_insert_queue_buffet(student_t *student)

@@ -44,6 +44,7 @@ void *student_run(void *arg)
 
     /* Estudante livre para se sentar, comer e ir embora */
     student_seat(self, tables);
+    msleep(2000); // tempo de comer
     student_leave(self, tables);
 
     /* Estudante foi embora. Altero o contador global protegido por mutex */
@@ -58,25 +59,23 @@ void *student_run(void *arg)
 
 void student_seat(student_t *self, table_t *table)
 {
-    printf("estudante %d ENTROU NA FUNÇÃO DE SENTAR\n", self->_id);
     int i = 0;
     int number_of_tables = globals_get_number_of_tables();
     pthread_mutex_t *pegar_cadeira = globals_get_mutex_seats();
     while (i < number_of_tables)
-    { // fica no loop olhando as mesas até achar uma com lugar vago
-        pthread_mutex_lock(&pegar_cadeira[i]);
-        if (table[i]._empty_seats > 0) // garante que o valor está certo (alguma ideia melhor?)
+    {                                          // fica no loop olhando as mesas até achar uma com lugar vago
+        pthread_mutex_lock(&pegar_cadeira[i]); // proteção dos valores
+        if (table[i]._empty_seats > 0)
         {
             table[i]._empty_seats--;
             pthread_mutex_unlock(&pegar_cadeira[i]);
             self->_id_buffet = table[i]._id; // salvando a mesa onde antes estava o buffet
-            printf("\n !! estudante %d sentou\n", self->_id);
-            return; //(não tem variável pra mesa)
+            return;                          // (não tem variável específica para mesa, não usamos mais _id_buffet)
         }
         else
         {
             pthread_mutex_unlock(&pegar_cadeira[i]);
-            i = (i + 1) % number_of_tables;
+            i = (i + 1) % number_of_tables; //  quando as mesas acabarem, recomeça da primeira
         }
     }
 }
@@ -90,35 +89,26 @@ void student_serve(student_t *self)
     {
         if (self->_wishes[self->_buffet_position] == 1)
         {
-            // LEMBRAR. ESTUDANTES DA MESMA FILA NÃO PODEM PEGAR A MESMA BACIA (USAR L/R)
-            // MAS ESTUDANTES DE FILAS DIFERENTES PODEM NA MESMA BACIA!
-
-            // if (buffet[id_buffet]._meal[self->_buffet_position] > 0)
-            //{
+            // semáforo por bacia garante que o estudante só começa a se servir se houver comida
+            // (inicializado com a quantidade total de porções)
             sem_wait(&buffet[id_buffet].sem_meals[self->_buffet_position]);
-            /*int *val = (int *)(malloc(sizeof(int)));
-            sem_getvalue(&buffet[id_buffet].sem_meals[self->_buffet_position], val);
-            printf("\nsem buffet %d, %d: %d\n", id_buffet, self->_buffet_position, *val);
-            free(val); */
 
-            // lock no mutex da bacia (um mutex pra cada bacia, de cada buffet)
+            // lock no mutex da bacia (um mutex para cada bacia, de cada buffet)
+            // garante exclusão mútua no decremento
             pthread_mutex_lock(&buffet[id_buffet].mutex_meals[self->_buffet_position]);
 
             buffet[id_buffet]._meal[self->_buffet_position] -= 1;
 
+            // libera o mutex da bacia em que o student está pegando comida
             pthread_mutex_unlock(&buffet[id_buffet].mutex_meals[self->_buffet_position]);
-            //}
-            // talvez ter outro lock pra caso esteja vazio, pra que tente de novo depois?
         }
-        msleep(5000); // tempo de se servir
+        msleep(1000); // tempo de se servir
         buffet_next_step(buffet, self);
     }
-    printf("~ estudante %d SAIU DO WHILE DE SERVE\n", self->_id);
 }
 
 void student_leave(student_t *self, table_t *table)
 {
-    msleep(5000); // tempo de comer
 
     /* Libera a cadeira em que estava sentado */
     pthread_mutex_t *pegar_cadeira = globals_get_mutex_seats();
@@ -128,7 +118,6 @@ void student_leave(student_t *self, table_t *table)
 
     /* Destrói o mutex pessoal */
     pthread_mutex_destroy(&self->mutex);
-    printf("!! Estudante %d foi embora\n", self->_id);
 }
 
 /* --------------------------------------------------------- */

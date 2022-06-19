@@ -14,10 +14,10 @@ typedef struct buffet
     int queue_left[5];
     int queue_right[5];
 
-    pthread_mutex_t mutex_meals[5]; // Número fixo, então var estática?
-    sem_t sem_meals[5];
-    sem_t controle_fila_esq[5];
-    sem_t controle_fila_dir[5];
+    pthread_mutex_t mutex_meals[5]; // Mutex que protege alteração do meal
+    sem_t sem_meals[5];             // Semáforo que controla quantidade de meals
+    sem_t controle_fila_esq[5];     // Semáforo de controle do next_step
+    sem_t controle_fila_dir[5];     // Semáforo de controle do next_step
 
     pthread_t thread; /* Thread do buffet   */
 } buffet_t;

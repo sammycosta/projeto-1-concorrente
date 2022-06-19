@@ -80,28 +80,18 @@ int globals_get_number_of_tables()
     return number_of_tables;
 }
 
-void globals_set_seats_per_table(int number)
-{
-    seats_per_table = number;
-}
-
-int globals_get_seats_per_table()
-{
-    return seats_per_table;
-}
-
 void init_mutexes()
 {
-    /* mutex sai fila do worker gate: inicia trancado */
+    /* Mutex sai fila do worker gate: inicia trancado */
     pthread_mutex_init(&sai_fila, NULL);
     pthread_mutex_lock(&sai_fila);
 
-    /* mutex que protege a contagem de estudantes saindo do buffet */
+    /* Mutex que protege a contagem de estudantes saindo do buffet */
     pthread_mutex_init(&mutex_served, NULL);
     pthread_mutex_init(&mutex_gone, NULL);
     pthread_mutex_init(&mutex_queue_insert, NULL);
 
-    /* mutexes das mesas */
+    /* Mutexes das mesas */
     pegar_cadeira = (pthread_mutex_t *)(malloc(sizeof(pthread_mutex_t) * number_of_tables));
     for (int i = 0; i < number_of_tables; i++)
     {
@@ -162,11 +152,11 @@ pthread_mutex_t *globals_get_mutex_queue_insert()
 void globals_finalize()
 {
 
-    /* Destruir mutexes aqui por enquanto */
+    /* Destruir mutexes */
 
     pthread_mutex_destroy(&sai_fila);
     pthread_mutex_destroy(&mutex_served);
-    pthread_mutex_destroy(&mutex_served);
+    pthread_mutex_destroy(&mutex_gone);
     pthread_mutex_destroy(&mutex_queue_insert);
 
     for (int i = 0; i < number_of_buffets; i++)
@@ -186,8 +176,10 @@ void globals_finalize()
 
     for (int i = 0; i < number_of_tables; i++)
     {
+        // destruindo mutex por mesa
         pthread_mutex_destroy(&(pegar_cadeira[i]));
     }
-    /* */
+
+    free(pegar_cadeira);
     free(table);
 }

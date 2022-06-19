@@ -30,7 +30,6 @@ extern void globals_set_students(int number);
  *
  * @return int
  */
-
 extern int globals_get_students();
 
 /**
@@ -90,7 +89,6 @@ extern void globals_set_number_of_tables(int number);
  *
  * @return int
  */
-
 extern int globals_get_number_of_tables();
 
 /**
@@ -98,13 +96,6 @@ extern int globals_get_number_of_tables();
  *
  */
 extern void globals_set_seats_per_table(int number);
-
-/**
- * @brief Retorna o número de seats por table (de modo global)
- *
- * @return int
- */
-extern int globals_get_seats_per_table();
 
 /**
  * @brief Inicializa os mutexes necessários (de modo global)
@@ -117,7 +108,6 @@ extern void init_mutexes();
  *
  * @return pthread_mutex_t*
  */
-
 extern pthread_mutex_t *globals_get_mutex_seats();
 
 /**
