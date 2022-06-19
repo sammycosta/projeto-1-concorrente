@@ -7,10 +7,11 @@ queue_t *students_queue = NULL;
 table_t *table = NULL;
 buffet_t *buffets_ref = NULL;
 
-pthread_mutex_t *pegar_cadeira; // global
+pthread_mutex_t *pegar_cadeira;
 pthread_mutex_t sai_fila;
 pthread_mutex_t mutex_served;
 pthread_mutex_t mutex_gone;
+pthread_mutex_t mutex_queue_insert;
 
 int number_of_buffets = 0;
 int students_number = 0;
@@ -18,7 +19,6 @@ int number_of_tables = 0;
 int seats_per_table = 0;
 int students_served = 0;
 int students_gone = 0;
-// extern pthread_mutex_t *pegar_cadeira; // variavel global, melhor fazer função?
 
 void globals_set_queue(queue_t *queue)
 {
@@ -99,6 +99,7 @@ void init_mutexes()
     /* mutex que protege a contagem de estudantes saindo do buffet */
     pthread_mutex_init(&mutex_served, NULL);
     pthread_mutex_init(&mutex_gone, NULL);
+    pthread_mutex_init(&mutex_queue_insert, NULL);
 
     /* mutexes das mesas */
     pegar_cadeira = (pthread_mutex_t *)(malloc(sizeof(pthread_mutex_t) * number_of_tables));
@@ -148,6 +149,11 @@ pthread_mutex_t *globals_get_mutex_gone()
     return &mutex_gone;
 }
 
+pthread_mutex_t *globals_get_mutex_queue_insert()
+{
+    return &mutex_queue_insert;
+}
+
 /**
  * @brief Finaliza todas as variáveis globais que ainda não foram liberadas.
  *  Se criar alguma variável global que faça uso de mallocs, lembre-se sempre de usar o free dentro
@@ -161,6 +167,7 @@ void globals_finalize()
     pthread_mutex_destroy(&sai_fila);
     pthread_mutex_destroy(&mutex_served);
     pthread_mutex_destroy(&mutex_served);
+    pthread_mutex_destroy(&mutex_queue_insert);
 
     for (int i = 0; i < number_of_buffets; i++)
     {
@@ -168,13 +175,12 @@ void globals_finalize()
         { // destruindo mutex por bacia
             pthread_mutex_destroy(&buffets_ref[i].mutex_meals[j]);
 
-            //destruindo semaforos por bacia
+            // destruindo semaforos por bacia
             sem_destroy(&(buffets_ref[i].sem_meals[j]));
 
-            //destruindo controles do next_step
+            // destruindo controles do next_step
             sem_destroy(&buffets_ref[i].controle_fila_dir[j]);
             sem_destroy(&buffets_ref[i].controle_fila_esq[j]);
-           
         }
     }
 

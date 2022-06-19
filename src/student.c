@@ -21,9 +21,11 @@ void *student_run(void *arg)
     pthread_mutex_lock(&self->mutex);
 
     /* Estudante entra na fila única externa  */
-    // talvez seja necessário proteger a inserção com um mutex.
+    pthread_mutex_t *mutex_queue_insert = globals_get_mutex_queue_insert();
+    pthread_mutex_lock(mutex_queue_insert);
     queue_t *fila_de_fora = globals_get_queue();
     queue_insert(fila_de_fora, self);
+    pthread_mutex_unlock(mutex_queue_insert);
 
     /* Estudante espera ser removido da fila externa para ser inserido no buffet */
     pthread_mutex_lock(&self->mutex);

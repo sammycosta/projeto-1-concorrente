@@ -166,4 +166,11 @@ extern void globals_set_students_gone(int number);
  * @return pthread_mutex_t*
  */
 extern pthread_mutex_t *globals_get_mutex_gone();
+
+/**
+ * @brief Retorna o endereço do mutex que protege o estudante entrando na fila externa
+ *
+ * @return pthread_mutex_t*
+ */
+extern pthread_mutex_t *globals_get_mutex_queue_insert();
 #endif

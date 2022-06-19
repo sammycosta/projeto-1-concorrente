@@ -8,6 +8,7 @@ echo [CC] buffet.o
 cc -Wall -Werror -std=c11 -pthread -D_POSIX_C_SOURCE=200809L  -fsanitize=address -fsanitize=undefined -I /home/samantha/Downloads/projeto-1-concorrente/include  -D NDEBUG buffet.c -c -o buffet.o
 echo [CC] worker_gate.o
 cc -Wall -Werror -std=c11 -pthread -D_POSIX_C_SOURCE=200809L  -fsanitize=address -fsanitize=undefined -I /home/samantha/Downloads/projeto-1-concorrente/include  -D NDEBUG worker_gate.c -c -o worker_gate.o
+ 
 echo [CC] config.o
 cc -Wall -Werror -std=c11 -pthread -D_POSIX_C_SOURCE=200809L  -fsanitize=address -fsanitize=undefined -I /home/samantha/Downloads/projeto-1-concorrente/include  -D NDEBUG config.c -c -o config.o
 echo [CC] table.o
